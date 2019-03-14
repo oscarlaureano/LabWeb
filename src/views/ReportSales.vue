@@ -12,6 +12,17 @@
                     <br>
                     <span class="font-weight-thin card-subtitle">Datos de ventas</span>
                   </v-flex>
+                  <v-flex>
+                    <v-text-field
+                      dark
+                      class="font-weight-light"
+                      v-model="search"
+                      append-icon="search"
+                      label="Search"
+                      single-line
+                      hide-details
+                    ></v-text-field>
+                  </v-flex>
                   <v-flex class="text-xs-right">
                     <v-btn @click="createSale" color="white" small fab outline>
                       <v-icon>add</v-icon>
@@ -27,6 +38,7 @@
                 :items="items"
                 :expand="expand"
                 item-key="id"
+                :search="search"
               >
                 <template slot="headerCell" slot-scope="{ header }">
                   <span class="subheading font-weight-light text--darken-3" v-text="header.text"/>
@@ -175,6 +187,8 @@
 
 <script>
 import ChartLine from '../components/ChartLine.js'
+var moment = require('moment')
+moment.locale('es')
 export default {
   components: {
     ChartLine
@@ -187,6 +201,7 @@ export default {
       expand: false,
       editingSale: {},
       newSale: {},
+      search: '',
       headers: [
         {
           text: 'Fecha',
@@ -212,7 +227,7 @@ export default {
       items: [
         {
           id: 1,
-          date: new Date('1/18/2019 07:28'),
+          date: moment(new Date('1/18/2019 07:28')).format('MMMM YYYY'),
           boxes: 35,
           kgms: 1200,
           total: 2400,
@@ -220,7 +235,7 @@ export default {
         },
         {
           id: 2,
-          date: new Date('3/02/2019 07:28'),
+          date: moment(new Date('3/02/2019 07:28')).format('MMMM YYYY'),
           boxes: 12,
           kgms: 310,
           total: 620,
@@ -228,7 +243,7 @@ export default {
         },
         {
           id: 3,
-          date: new Date('3/05/2019 07:28'),
+          date: moment(new Date('3/05/2019 07:28')).format('MMMM YYYY'),
           boxes: 1,
           kgms: 50,
           total: 100,
@@ -236,7 +251,7 @@ export default {
         },
         {
           id: 4,
-          date: new Date('4/02/2019 07:28'),
+          date: moment(new Date('4/02/2019 07:28')).format('MMMM YYYY'),
           boxes: 10,
           kgms: 5000,
           total: 10000,
@@ -299,7 +314,7 @@ export default {
     setupChart () {
       var newLabels = []
       this.items.forEach(function (item) {
-        newLabels.push(item.date.toLocaleDateString())
+        newLabels.push(item.date)
       })
 
       var newChartSales = {
@@ -312,6 +327,7 @@ export default {
             radius: 3,
             fill: false,
             pointBorderColor: 'green',
+            backgroundColor: 'green',
             data: [2400, 620, 100, 10000]
           }
         ]

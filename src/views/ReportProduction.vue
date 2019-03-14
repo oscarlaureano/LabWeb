@@ -6,11 +6,24 @@
           <v-card full-width>
             <v-card class="floating-card">
               <v-card-text class="">
-                <v-flex class="text-xs-left">
-                  <span class="title font-weight-light card-title">Producción</span>
-                  <br>
-                  <span class="font-weight-thin card-subtitle">Datos de produccion</span>
-                </v-flex>
+                <v-layout>
+                  <v-flex class="text-xs-left">
+                    <span class="title font-weight-light card-title">Producción</span>
+                    <br>
+                    <span class="font-weight-thin card-subtitle">Datos de produccion</span>
+                  </v-flex>
+                  <v-flex>
+                    <v-text-field
+                      dark
+                      class="font-weight-light"
+                      v-model="search"
+                      append-icon="search"
+                      label="Search"
+                      single-line
+                      hide-details
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
               </v-card-text>
             </v-card>
 
@@ -20,6 +33,7 @@
                 :headers="headers"
                 :items="items"
                 :expand="expand"
+                :search="search"
                 item-key="id"
               >
                 <template slot="headerCell" slot-scope="{ header }">
@@ -115,6 +129,8 @@
 
 <script>
 import ChartLine from '../components/ChartLine.js'
+var moment = require('moment')
+moment.locale('es')
 export default {
   components: {
     ChartLine
@@ -125,6 +141,7 @@ export default {
       dialogEditProduction: false,
       editingProduction: {},
       expand: false,
+      search: '',
       headers: [
         {
           text: 'Fecha',
@@ -145,27 +162,39 @@ export default {
       items: [
         {
           id: 1,
-          date: new Date('1/18/2019 07:28'),
-          boxes: 35,
-          kgms: 1200
+          date: moment(new Date('01/01/2019 07:28')).format('MMMM YYYY'),
+          boxes: 350,
+          kgms: 12000
         },
         {
           id: 2,
-          date: new Date('3/02/2019 07:28'),
-          boxes: 12,
-          kgms: 310
+          date: moment(new Date('02/01/2019 07:28')).format('MMMM YYYY'),
+          boxes: 120,
+          kgms: 3100
         },
         {
           id: 3,
-          date: new Date('3/05/2019 07:28'),
-          boxes: 1,
-          kgms: 50
+          date: moment(new Date('03/01/2019 07:28')).format('MMMM YYYY'),
+          boxes: 10,
+          kgms: 500
         },
         {
           id: 4,
-          date: new Date('4/02/2019 07:28'),
-          boxes: 10,
-          kgms: 5000
+          date: moment(new Date('04/01/2019 07:28')).format('MMMM YYYY'),
+          boxes: 100,
+          kgms: 50000
+        },
+        {
+          id: 5,
+          date: moment(new Date('05/01/2019 07:28')).format('MMMM YYYY'),
+          boxes: 100,
+          kgms: 50000
+        },
+        {
+          id: 6,
+          date: moment(new Date('06/01/2019 07:28')).format('MMMM YYYY'),
+          boxes: 100,
+          kgms: 50000
         }
       ],
       chartOptions: {
@@ -216,29 +245,41 @@ export default {
     setupChart () {
       var newLabels = []
       this.items.forEach(function (item) {
-        newLabels.push(item.date.toLocaleDateString())
+        newLabels.push(item.date)
       })
 
       var newChartProduction = {
         labels: newLabels,
         datasets: [
           {
-            label: 'Cajas',
+            label: 'Tomates',
             borderColor: 'blue',
             borderWidth: 2,
             radius: 3,
             fill: false,
             pointBorderColor: 'blue',
-            data: [35, 12, 1, 10]
+            backgroundColor: 'blue',
+            data: [150, 45, 2, 25, 30, 30]
           },
           {
-            label: 'KGMS',
+            label: 'Pimiento',
             borderColor: 'green',
             borderWidth: 2,
             radius: 3,
             fill: false,
             pointBorderColor: 'green',
-            data: [1200, 310, 50, 5000]
+            backgroundColor: 'green',
+            data: [100, 35, 2, 40, 30, 30, 30]
+          },
+          {
+            label: 'Calabaza',
+            borderColor: 'orange',
+            borderWidth: 2,
+            radius: 3,
+            fill: false,
+            pointBorderColor: 'orange',
+            backgroundColor: 'orange',
+            data: [100, 40, 6, 35, 45, 40, 40]
           }
         ]
       }

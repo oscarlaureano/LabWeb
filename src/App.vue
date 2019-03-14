@@ -69,7 +69,7 @@ export default {
     return {
       links: [
         {
-          to: '/dashboard',
+          to: '/',
           icon: 'dashboard',
           text: 'Dashboard'
         },

@@ -12,6 +12,17 @@
                     <br>
                     <span class="font-weight-thin card-subtitle">Reporte de egresos</span>
                   </v-flex>
+                  <v-flex>
+                    <v-text-field
+                      dark
+                      class="font-weight-light"
+                      v-model="search"
+                      append-icon="search"
+                      label="Search"
+                      single-line
+                      hide-details
+                    ></v-text-field>
+                  </v-flex>
                   <v-flex class="text-xs-right">
                     <v-btn @click="createExpense" color="white" small fab outline>
                       <v-icon>add</v-icon>
@@ -27,6 +38,7 @@
                 :items="items"
                 :expand="expand"
                 item-key="id"
+                :search="search"
                 hide-actions
               >
                 <template slot="headerCell" slot-scope="{ header }">
@@ -59,6 +71,11 @@
                   </v-card>
                 </template>
               </v-data-table>
+              <br><br><br>
+              <chart-bar
+                :chart-data="barChartCycles"
+                :options="chartOptionsBar"
+              ></chart-bar>
             </v-card-text>
           </v-card>
         </v-flex>
@@ -160,8 +177,10 @@
 </template>
 
 <script>
+import ChartBar from '../components/ChartBar.js'
 export default {
   components: {
+    ChartBar
   },
   data () {
     return {
@@ -169,8 +188,10 @@ export default {
       dialogNewExpense: false,
       dialogEditExpense: false,
       expand: false,
+      search: '',
       editingExpense: {},
       newExpense: {},
+      barChartCycles: {},
       headers: [
         {
           text: 'Tipo',
@@ -207,7 +228,25 @@ export default {
           cost: 1200.00,
           date: '17/01/2019'
         }
-      ]
+      ],
+      chartOptionsBar: {
+        responsive: true,
+        maintainAspectRatio: false,
+        tooltips: {
+          callbacks: {
+            label: function (tooltipItem, data) {
+              return data.labels[tooltipItem.index].split(':')[0] + ': ' + data.datasets[0].data[tooltipItem.index]
+            }
+          }
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
     }
   },
   methods: {
@@ -227,13 +266,51 @@ export default {
     postNewExpense () {
       this.dialogNewExpense = false
       // post Expense to db
+    },
+    setupChart () {
+      var newChartExpenses = {
+        labels: ['Ciclo marzo-octubre 2014', 'Ciclo marzo-octubre 2015', 'Ciclo marzo-octubre 2016', 'Ciclo marzo-octubre 2017', 'Ciclo marzo-octubre 2018'],
+        datasets: [
+          {
+            label: 'Materiales',
+            borderColor: 'blue',
+            borderWidth: 2,
+            radius: 3,
+            fill: false,
+            pointBorderColor: 'blue',
+            backgroundColor: 'blue',
+            data: [15000, 4500, 2000, 2500, 3000, 3000]
+          },
+          {
+            label: 'Servicios',
+            borderColor: 'green',
+            borderWidth: 2,
+            radius: 3,
+            fill: false,
+            pointBorderColor: 'green',
+            backgroundColor: 'green',
+            data: [10000, 3005, 2000, 4000, 3000, 3000, 3000]
+          },
+          {
+            label: 'Tierra',
+            borderColor: 'orange',
+            borderWidth: 2,
+            radius: 3,
+            fill: false,
+            pointBorderColor: 'orange',
+            backgroundColor: 'orange',
+            data: [10000, 4010, 6005, 3500, 4500, 4008, 4000]
+          }
+        ]
+      }
+      this.barChartCycles = newChartExpenses
     }
   },
   mounted () {
+    this.setupChart()
   }
 }
 </script>
 
 <style scoped>
-
 </style>

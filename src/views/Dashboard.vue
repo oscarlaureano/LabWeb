@@ -74,7 +74,7 @@
       <br>
 
       <v-layout>
-        <v-flex md12 pr-2>
+        <v-flex md7 pr-2>
           <v-card class="roundCard">
             <v-card-text>
               <chart-line
@@ -82,6 +82,18 @@
                 :options="chartOptionsDummy"
                 class="Chart"
               ></chart-line>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+
+        <v-flex md5>
+          <v-card class="roundCard">
+            <v-card-text>
+              <chart-bar
+                :chart-data="stockChart"
+                :options="chartOptionsBar"
+                class="Chart"
+              ></chart-bar>
             </v-card-text>
           </v-card>
         </v-flex>
@@ -112,11 +124,11 @@
             <v-card-text>
               <v-layout>
                 <v-flex xs5 class="text-xs-center vaMiddle">
-                  <i class="fas fa-user fa-3x" style="color: #7d68c8;"></i>
+                  <i class="fas fa-wifi fa-3x" style="color: #7d68c8;"></i>
                 </v-flex>
 
                 <v-flex xs7 class="text-xs-right">
-                  Cajas promedio por cliente
+                  # de sensores
                   <p class="numbers">4</p>
                 </v-flex>
               </v-layout>
@@ -148,23 +160,48 @@
 
 <script>
 import ChartLine from '../components/ChartLine'
-var moment = require('moment')
+import ChartBar from '../components/ChartBar'
+// var moment = require('moment')
 export default {
   components: {
-    ChartLine
+    ChartLine,
+    ChartBar
   },
   data () {
     return {
+      stockChart: {},
       lineChartDummy1: {
         labels: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'],
         datasets: [
           {
-            label: moment().startOf('isoweek').locale('es').format('DD/MM/YY') + ' - ' + moment().endOf('isoweek').locale('es').format('DD/MM/YY'),
-            borderColor: '#1737a7',
-            borderWidth: 1,
-            pointBorderColor: '#1737a7',
-            backgroundColor: '#7ac29a',
-            data: [1580, 902, 1240, 2150, 1954, 2232, 2001]
+            label: 'Meta',
+            borderColor: 'blue',
+            borderWidth: 2,
+            radius: 3,
+            fill: false,
+            pointBorderColor: 'blue',
+            backgroundColor: 'blue',
+            data: [100, 100, 100, 105, 105, 105]
+          },
+          {
+            label: 'Total produccion',
+            borderColor: 'green',
+            borderWidth: 2,
+            radius: 3,
+            fill: false,
+            pointBorderColor: 'green',
+            backgroundColor: 'green',
+            data: [100, 100, 112, 90, 105, 105, 105]
+          },
+          {
+            label: 'Perdidas',
+            borderColor: 'red',
+            borderWidth: 2,
+            radius: 3,
+            fill: false,
+            pointBorderColor: 'red',
+            backgroundColor: 'red',
+            data: [0, 3, 0, 22, 1, 0, 0]
           }
         ]
       },
@@ -185,12 +222,64 @@ export default {
             }
           }]
         }
+      },
+      chartOptionsBar: {
+        scales: {
+          yAxes: [
+            {
+              gridLines: {
+                display: true
+              }
+            }
+          ],
+          xAxes: [
+            {
+              gridLines: {
+                display: true
+              }
+            }
+          ]
+        },
+        legend: {
+          display: true
+        },
+        tooltips: {
+          enabled: true,
+          mode: 'single',
+          callbacks: {
+            label: function (tooltipItems, data) {
+              return tooltipItems.yLabel + ' unidades'
+            }
+          }
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        height: 200
       }
     }
   },
   methods: {
+    setupCharts () {
+      var newStockChart = {
+        labels: ['lts pesticida', 'kg semilla', 'kg abono', 'kg tomate', 'kg pimiento', 'kg calabaza'],
+        datasets: [
+          {
+            label: 'Inventario',
+            borderColor: 'green',
+            borderWidth: 2,
+            radius: 3,
+            fill: false,
+            pointBorderColor: 'green',
+            backgroundColor: 'green',
+            data: [1500, 200, 4850, 2500, 1350, 2100]
+          }
+        ]
+      }
+      this.stockChart = newStockChart
+    }
   },
   mounted () {
+    this.setupCharts()
   }
 }
 </script>

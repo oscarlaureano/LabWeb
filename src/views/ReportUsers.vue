@@ -12,6 +12,17 @@
                     <br>
                     <span class="font-weight-thin card-subtitle">Manejo de usuarios</span>
                   </v-flex>
+                  <v-flex>
+                    <v-text-field
+                      dark
+                      class="font-weight-light"
+                      v-model="search"
+                      append-icon="search"
+                      label="Search"
+                      single-line
+                      hide-details
+                    ></v-text-field>
+                  </v-flex>
                   <v-flex class="text-xs-right">
                     <v-btn @click="createUser" color="white" small fab outline>
                       <v-icon>add</v-icon>
@@ -26,6 +37,7 @@
                 :headers="headers"
                 :items="items"
                 :expand="expand"
+                :search="search"
                 item-key="id"
                 hide-actions
               >
@@ -167,6 +179,7 @@ export default {
       dialogNewUser: false,
       dialogEditUser: false,
       expand: false,
+      search: '',
       editingUser: {},
       newUser: {},
       headers: [
