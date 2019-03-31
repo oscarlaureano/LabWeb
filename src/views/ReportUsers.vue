@@ -168,7 +168,10 @@
     </v-dialog>
   </div>
 </template>
-
+<script>
+require('../controller/users').then(function (data) {
+})
+</script>
 <script>
 export default {
   components: {
@@ -199,38 +202,26 @@ export default {
           align: 'right'
         }
       ],
-      items: [
+      items:[ {
+        id: 1,
+        name: 'Valentin Huerta',
+        email: 'vale@gmail.com',
+        role: '\u0000' },
         {
-          id: 1,
-          name: 'Angel F',
-          email: 'a@a.aa',
-          role: 'admin'
-        },
+        id: 2,
+        name: 'Oscar Laureano',
+        email: 'laureano@gmail.com',
+        role: '\u0001' },
         {
-          id: 2,
-          name: 'Oscar L',
-          email: 'b@a.aa',
-          role: 'admin'
-        },
+        id: 3,
+        name: 'Omar Flores',
+        email: 'omar@gmail.com',
+        role: '\u0000' },
         {
-          id: 3,
-          name: 'Omar F',
-          email: 'c@a.aa',
-          role: 'admin'
-        },
-        {
-          id: 4,
-          name: 'Valentin H',
-          email: 'd@a.aa',
-          role: 'admin'
-        },
-        {
-          id: 5,
-          name: 'David C',
-          email: 'e@a.aa',
-          role: 'user'
-        }
-      ]
+        id: 4,
+        name: 'Ángel Figueroa',
+        email: 'angulz@gmail.com',
+        role: '\u0000' } ]
     }
   },
   methods: {
