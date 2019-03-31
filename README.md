@@ -10,6 +10,11 @@ npm install
 npm run serve
 ```
 
+### Run back API
+```
+node controller/connectionDB.js
+```
+
 ### Compiles and minifies for production
 ```
 npm run build
@@ -25,6 +30,3 @@ npm run test
 npm run lint
 ```
 
-### SQL
-
-npm install mysql

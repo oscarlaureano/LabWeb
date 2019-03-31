@@ -169,10 +169,7 @@
   </div>
 </template>
 <script>
-require('../controller/users').then(function (data) {
-})
-</script>
-<script>
+import axios from 'axios'
 export default {
   components: {
   },
@@ -202,26 +199,7 @@ export default {
           align: 'right'
         }
       ],
-      items:[ {
-        id: 1,
-        name: 'Valentin Huerta',
-        email: 'vale@gmail.com',
-        role: '\u0000' },
-        {
-        id: 2,
-        name: 'Oscar Laureano',
-        email: 'laureano@gmail.com',
-        role: '\u0001' },
-        {
-        id: 3,
-        name: 'Omar Flores',
-        email: 'omar@gmail.com',
-        role: '\u0000' },
-        {
-        id: 4,
-        name: 'Ángel Figueroa',
-        email: 'angulz@gmail.com',
-        role: '\u0000' } ]
+      items: []
     }
   },
   methods: {
@@ -244,6 +222,9 @@ export default {
     }
   },
   mounted () {
+    axios
+      .get('http://localhost:3000/getUsers')
+      .then(response => (this.items = response.data))
   }
 }
 </script>
