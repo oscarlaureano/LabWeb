@@ -222,6 +222,7 @@ export default {
     }
   },
   mounted () {
+    // GETTING DATA
     axios
       .get('http://localhost:3000/getUsers')
       .then(response => (this.items = response.data))

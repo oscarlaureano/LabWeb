@@ -178,6 +178,7 @@
 
 <script>
 import ChartBar from '../components/ChartBar.js'
+import axios from 'axios'
 export default {
   components: {
     ChartBar
@@ -209,26 +210,7 @@ export default {
           align: 'right'
         }
       ],
-      items: [
-        {
-          id: 1,
-          type: 'Servicios',
-          cost: 7500.00,
-          date: '01/01/2019'
-        },
-        {
-          id: 2,
-          type: 'Compra Materiales',
-          cost: 65355.56,
-          date: '15/01/2019'
-        },
-        {
-          id: 3,
-          type: 'Compra Materiales',
-          cost: 1200.00,
-          date: '17/01/2019'
-        }
-      ],
+      items: [],
       chartOptionsBar: {
         responsive: true,
         maintainAspectRatio: false,
@@ -308,6 +290,10 @@ export default {
   },
   mounted () {
     this.setupChart()
+    // GETTING DATA
+    axios
+      .get('http://localhost:3000/getExpenses')
+      .then(response => (this.items = response.data))
   }
 }
 </script>

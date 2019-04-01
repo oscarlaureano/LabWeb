@@ -129,6 +129,7 @@
 
 <script>
 import ChartLine from '../components/ChartLine.js'
+import axios from 'axios'
 var moment = require('moment')
 moment.locale('es')
 export default {
@@ -288,6 +289,10 @@ export default {
   },
   mounted () {
     this.setupChart()
+    // GETTING DATA
+    axios
+      .get('http://localhost:3000/getProduction')
+      .then(response => (this.items = response.data))
   }
 }
 </script>
