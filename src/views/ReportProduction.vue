@@ -44,6 +44,7 @@
                   <tr @click="props.expanded = !props.expanded">
                     <td>{{ props.item.date }}</td>
                     <td>{{ props.item.boxes }}</td>
+                    <td>{{ props.item.productionID }}</td>
                     <td class="text-xs-right">{{ props.item.kgms }}</td>
                   </tr>
                 </template>
@@ -143,6 +144,7 @@ export default {
       editingProduction: {},
       expand: false,
       search: '',
+      products: [],
       headers: [
         {
           text: 'Fecha',
@@ -152,6 +154,11 @@ export default {
           sortable: false,
           text: '# total de cajas',
           value: 'boxes'
+        },
+        {
+          sortable: true,
+          text: 'Producto',
+          value: 'productionID'
         },
         {
           sortable: false,
@@ -253,7 +260,7 @@ export default {
         labels: newLabels,
         datasets: [
           {
-            label: 'Tomates',
+            label: this.products[0].name,
             borderColor: 'blue',
             borderWidth: 2,
             radius: 3,
@@ -263,7 +270,7 @@ export default {
             data: [150, 45, 2, 25, 30, 30]
           },
           {
-            label: 'Pimiento',
+            label: this.products[1].name,
             borderColor: 'green',
             borderWidth: 2,
             radius: 3,
@@ -273,7 +280,7 @@ export default {
             data: [100, 35, 2, 40, 30, 30, 30]
           },
           {
-            label: 'Calabaza',
+            label: this.products[2].name,
             borderColor: 'orange',
             borderWidth: 2,
             radius: 3,
@@ -288,11 +295,30 @@ export default {
     }
   },
   mounted () {
-    this.setupChart()
-    // GETTING DATA
-    axios
-      .get('http://localhost:3000/getProduction')
-      .then(response => (this.items = response.data))
+    // Get product name data
+    axios.get('http://localhost:3000/getProducts')
+      .then(function (response) {
+        vm.products = response.data
+        console.log(vm.products)
+      }, response => {
+        console.log('bad request')
+        console.log(response.data)
+      })
+
+    // Get production data and initialize chart
+    var vm = this
+    axios.get('http://localhost:3000/getProduction')
+      .then(function (response) {
+        vm.items = response.data
+        vm.items.forEach(function (production) {
+          production.productionID = vm.products[production.productID - 1].name
+        })
+        // Setup chart
+        vm.setupChart()
+      }, response => {
+        console.log('bad request')
+        console.log(response.data)
+      })
   }
 }
 </script>

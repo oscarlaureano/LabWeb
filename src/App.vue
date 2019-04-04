@@ -106,6 +106,10 @@ export default {
 </script>
 
 <style>
+.v-image__image {
+  opacity: .4;
+}
+
 #app-drawer .v-list__tile {
   border-radius: 4px;
   color: white;

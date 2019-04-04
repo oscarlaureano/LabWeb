@@ -50,6 +50,31 @@ app.get('/getUsers', (req, res) =>{
   })
 })
 
+// Obtener los productos ( id_Producto, tipo )
+app.get('/getProducts', (req, res) =>{
+  // Avoiding CORS errors
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+
+  // Vars for response
+  var products = []
+  var product
+
+  // Query
+  var sql = 'SELECT id_Producto, tipo FROM producto'
+
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err
+    // Fetching and formatting data
+    for (var i = 0; i < result.length; i++) {
+      product = { id: result[i].id_Producto, name: result[i].tipo }
+      products.push(product)
+    }
+    // Returning answer
+    res.json(products)
+  })
+})
+
 // Obtener los egresos ( id_Egreso, Tipo, Costo, Fecha )
 app.get('/getExpenses', (req, res) =>{
   // Avoiding CORS errors
@@ -113,13 +138,13 @@ app.get('/getProduction', (req, res) =>{
   var product
 
   // Query
-  var sql = 'SELECT id_Produccion, fecha, Total_Cajas, KGMS FROM produccion'
+  var sql = 'SELECT id_Produccion, fecha, Total_Cajas, KGMS, id_Producto FROM produccion'
 
   db.query(sql, function (err, result, fields) {
     if (err) throw err
     // Fetching and formatting data
     for (var i = 0; i < result.length; i++) {
-      product = { id: result[i].id_Produccion, date: result[i].fecha.toISOString(), boxes: result[i].Total_Cajas, kgms: result[i].KGMS }
+      product = { id: result[i].id_Produccion, date: result[i].fecha.toISOString(), boxes: result[i].Total_Cajas, kgms: result[i].KGMS, productID: result[i].id_Producto }
       product.date = product.date.substring(0,10)
       production.push(product)
     }
