@@ -300,10 +300,22 @@ export default {
       this.editingSale.boxes = sale.boxes
       this.editingSale.kgms = sale.kgms
       this.editingSale.total = sale.total
+      this.editingSale.id = sale.id
+      this.editingSale.date = sale.date
       this.dialogEditSale = true
     },
     saveSale () {
       this.dialogEditSale = false
+       axios
+        .put(`http://localhost:3000/sale/${this.editingSale.id}`, {
+          boxes: this.editingSale.boxes,
+          total: this.editingSale.total,
+          kgms: this.editingSale.kgms,
+          date: this.editingSale.date
+        })
+        .then(response => {
+          console.log(response.data)
+        })
     },
     createSale () {
       this.dialogNewSale = true

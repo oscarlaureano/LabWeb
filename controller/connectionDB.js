@@ -242,6 +242,27 @@ app.put('/expense/:id', (req, res) => {
   })
 })
 
+// Actualizar venta ( Fecha, Total_Cajas, Importe, KGMS )
+app.put('/sale/:id', (req, res) => {
+  let id = req.params.id
+  let body = req.body
+
+  var sql = `UPDATE Venta
+    SET Total_Cajas = ${body.boxes}, Importe = ${body.total}, 
+    KGMS = ${body.kgms}, Fecha = '${body.date}'
+    WHERE id_Venta = ${id};`
+
+  db.query(sql, (err, result) => {
+    if (err) throw err
+    console.log('1 record updated')
+  })
+
+  res.json({
+    ok: true,
+    body
+  })
+})
+
 app.listen(process.env.PORT || '3000', () => {
   console.log('Server started on port 3000')
 })
