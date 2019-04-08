@@ -113,7 +113,7 @@
             <v-flex xs6 px-2>
               <v-text-field
                 label="# total de cajas"
-                v-model="editingSale.boxes"
+                v-model="newSale.boxes"
               >
               </v-text-field>
             </v-flex>
@@ -121,7 +121,7 @@
             <v-flex xs6 px-2>
               <v-text-field
                 label="KGMS"
-                v-model="editingSale.kgms"
+                v-model="newSale.kgms"
               >
               </v-text-field>
             </v-flex>
@@ -130,7 +130,7 @@
             <v-flex xs6 px-2>
               <v-text-field
                 label="Total $"
-                v-model="editingSale.total"
+                v-model="newSale.total"
               >
               </v-text-field>
             </v-flex>
@@ -309,8 +309,24 @@ export default {
       this.dialogNewSale = true
     },
     postNewSale () {
-      this.dialogNewSale = false
+      console.log('NEW sale...', this.newSale)
+      this.dialogNewSale = false  
+      var currentDate = new Date()
+      var day = ('0000' + currentDate.getDate()).slice(-2)
+      var month = ('0000' + (currentDate.getMonth()+1)).slice(-2)
+      var year = currentDate.getFullYear().toString()
+      var date = year + '-' + month + '-' + day
       // post sale to db
+      axios
+        .post('http://localhost:3000/sale', {
+          date: date,
+          boxes: this.newSale.boxes,
+          total: this.newSale.total,
+          kgms: this.newSale.kgms
+        })
+        .then(response => {
+          console.log(response.data)
+        })
     },
     setupChart () {
       var newLabels = []

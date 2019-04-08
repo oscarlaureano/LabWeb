@@ -3,7 +3,6 @@ const mysql = require('mysql')
 const bcrypt = require('bcrypt')
 
 // Configuration to connect to DB
-// Configuration to connect to DB
 var config = {
   host: 'localhost',
   user: 'root',
@@ -110,7 +109,7 @@ app.get('/expenses', (req, res) => {
   })
 })
 
-// Obtener las ventas ( id_Venta, Fecha, Total_Cajas, KGMS, Importe, producto.tipo)
+// Obtener las ventas ( id_Venta, Fecha, Total_Cajas, KGMS, Importe, producto.tipo )
 app.get('/sales', (req, res) => {
   // Avoiding CORS errors
   res.header('Access-Control-Allow-Origin', '*')
@@ -134,7 +133,7 @@ app.get('/sales', (req, res) => {
   })
 })
 
-// Obtener la produccion ( id_Produccion, fecha, Total_Cajas, KGMS)
+// Obtener la produccion ( id_Produccion, fecha, Total_Cajas, KGMS )
 app.get('/production', (req, res) => {
   // Avoiding CORS errors
   res.header('Access-Control-Allow-Origin', '*')
@@ -158,7 +157,7 @@ app.get('/production', (req, res) => {
   })
 })
 
-// Agregar usuario ( Nombre_Completo, Correo, Contraseña, Tipo_Usuario)
+// Agregar usuario ( Nombre_Completo, Correo, Contraseña, Tipo_Usuario )
 app.post('/user', (req, res) => {
   let body = req.body
   var sql = `INSERT INTO Usuario(Nombre_Completo, Correo, Contraseña, Tipo_Usuario)
@@ -173,12 +172,27 @@ app.post('/user', (req, res) => {
   })
 })
 
-// Agregar egreso ( Tipo, Costo, Fecha)
+// Agregar egreso ( Tipo, Costo, Fecha )
 app.post('/expense', (req, res) => {
   let body = req.body
   var sql = `INSERT INTO Egresos (Tipo, Costo, Fecha)
           VALUES ('${body.type}',${body.cost},'${body.date}');`
   console.log(body)
+  db.query(sql, function (err, result) {
+    if (err) throw err
+    console.log('1 record inserted')
+  })
+  res.json({
+    ok: true,
+    body
+  })
+})
+
+// Agregar venta ( Fecha, Total_Cajas, Importe, KGMS )
+app.post('/sale', (req, res) => {
+  let body = req.body
+  var sql = `INSERT INTO Venta(Fecha, Total_Cajas, Importe, KGMS)
+    VALUES ('${body.date}', ${body.boxes}, ${body.total}, ${body.kgms});`
   db.query(sql, function (err, result) {
     if (err) throw err
     console.log('1 record inserted')
