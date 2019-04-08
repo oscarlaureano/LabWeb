@@ -223,7 +223,8 @@ export default {
         .post('http://localhost:3000/user', {
           name: this.newUser.name,
           email: this.newUser.email,
-          role: this.newUser.role
+          role: this.newUser.role,
+          pass: 'pass'
         })
         .then(response => {
           console.log(response.data)

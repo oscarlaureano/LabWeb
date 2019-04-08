@@ -1,5 +1,6 @@
 const express = require('express')
 const mysql = require('mysql')
+const bcrypt = require('bcrypt');
 
 // Configuration to connect to DB
 var config = {
@@ -160,7 +161,7 @@ app.get('/production', (req, res) => {
 app.post('/user', (req, res) => {
   let body = req.body
   var sql = `INSERT INTO Usuario(Nombre_Completo, Correo, Contraseña, Tipo_Usuario)
-    VALUES ('${req.body.name}', '${req.body.email}', 'pass', ${req.body.role});`
+    VALUES ('${body.name}', '${body.email}', '${bcrypt.hashSync(body.pass, 10)}', ${body.role});`
   db.query(sql, function (err, result) {
     if (err) throw err
     console.log('1 record inserted')
