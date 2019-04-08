@@ -203,6 +203,25 @@ app.post('/sale', (req, res) => {
   })
 })
 
+// Actualizar usuario ( Nombre_Completo, Correo, Contraseña, Tipo_Usuario )
+app.put('/user/:id', (req, res) => {
+  let id = req.params.id
+  let body = req.body
+  var sql = `UPDATE Usuario
+    SET Nombre_Completo = '${body.name}', Correo = '${body.email}', 
+    Contraseña = '${bcrypt.hashSync(body.pass, 10)}', Tipo_Usuario = ${body.role}
+    WHERE id = ${id};`
+
+  db.query(sql, (err, result) => {
+    if (err) throw err
+    console.log('1 record updated')
+  })
+  res.json({
+    ok: true,
+    body
+  })
+})
+
 app.listen(process.env.PORT || '3000', () => {
   console.log('Server started on port 3000')
 })

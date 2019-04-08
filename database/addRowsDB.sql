@@ -75,8 +75,3 @@ VALUES ('2019-03-09', 300, 100, 2);
 
 INSERT INTO Produccion(fecha, Total_Cajas, KGMS, id_Producto)
 VALUES ('2019-03-09', 450, 150, 3);
-
-
-
-
-

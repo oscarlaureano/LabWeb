@@ -207,11 +207,22 @@ export default {
       this.editingUser.name = user.name
       this.editingUser.email = user.email
       this.editingUser.role = user.role
+      this.editingUser.id = user.id
       this.dialogEditUser = true
     },
     saveUser () {
       this.dialogEditUser = false
       // update user with id in db
+      axios
+        .put(`http://localhost:3000/user/${this.editingUser.id}`, {
+          name: this.editingUser.name,
+          email: this.editingUser.email,
+          role: this.editingUser.role,
+          pass: 'pass'
+        })
+        .then(response => {
+          console.log(response.data)
+        })
     },
     createUser () {
       this.dialogNewUser = true
