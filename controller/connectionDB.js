@@ -222,6 +222,26 @@ app.put('/user/:id', (req, res) => {
   })
 })
 
+// Actualizar egreso ( Tipo, Costo, Fecha )
+app.put('/expense/:id', (req, res) => {
+  let id = req.params.id
+  let body = req.body
+  var sql = `UPDATE Egresos
+    SET Tipo = '${body.type}', Costo = ${body.cost}, 
+    Fecha = '${body.date}'
+    WHERE id_Egreso = ${id};`
+
+  db.query(sql, (err, result) => {
+    if (err) throw err
+    console.log('1 record updated')
+  })
+
+  res.json({
+    ok: true,
+    body
+  })
+})
+
 app.listen(process.env.PORT || '3000', () => {
   console.log('Server started on port 3000')
 })

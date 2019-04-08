@@ -236,11 +236,20 @@ export default {
       this.editingExpense.type = expense.type
       this.editingExpense.cost = expense.cost
       this.editingExpense.date = expense.date
+      this.editingExpense.id = expense.id
       this.dialogEditExpense = true
     },
     saveExpense () {
       this.dialogEditExpense = false
-      // update expense with id in db
+       axios
+        .put(`http://localhost:3000/expense/${this.editingExpense.id}`, {
+          type: this.editingExpense.type,
+          cost: this.editingExpense.cost,
+          date: this.editingExpense.date
+        })
+        .then(response => {
+          console.log(response.data)
+        })
     },
     createExpense () {
       this.dialogNewExpense = true
