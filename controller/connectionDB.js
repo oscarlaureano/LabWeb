@@ -1,7 +1,8 @@
 const express = require('express')
 const mysql = require('mysql')
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt')
 
+// Configuration to connect to DB
 // Configuration to connect to DB
 var config = {
   host: 'localhost',
@@ -157,11 +158,27 @@ app.get('/production', (req, res) => {
   })
 })
 
-// Agregar usuario ( Nombre_Completo, Correo, Tipo_Usuario)
+// Agregar usuario ( Nombre_Completo, Correo, Contraseña, Tipo_Usuario)
 app.post('/user', (req, res) => {
   let body = req.body
   var sql = `INSERT INTO Usuario(Nombre_Completo, Correo, Contraseña, Tipo_Usuario)
     VALUES ('${body.name}', '${body.email}', '${bcrypt.hashSync(body.pass, 10)}', ${body.role});`
+  db.query(sql, function (err, result) {
+    if (err) throw err
+    console.log('1 record inserted')
+  })
+  res.json({
+    ok: true,
+    body
+  })
+})
+
+// Agregar egreso ( Tipo, Costo, Fecha)
+app.post('/expense', (req, res) => {
+  let body = req.body
+  var sql = `INSERT INTO Egresos (Tipo, Costo, Fecha)
+          VALUES ('${body.type}',${body.cost},'${body.date}');`
+  console.log(body)
   db.query(sql, function (err, result) {
     if (err) throw err
     console.log('1 record inserted')

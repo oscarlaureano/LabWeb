@@ -248,6 +248,15 @@ export default {
     postNewExpense () {
       this.dialogNewExpense = false
       // post Expense to db
+      axios
+        .post('http://localhost:3000/expense', {
+          type: this.newExpense.type,
+          cost: this.newExpense.cost,
+          date: this.newExpense.date
+        })
+        .then(response => {
+          console.log(response.data)
+        })
     },
     setupChart () {
       var newChartExpenses = {
