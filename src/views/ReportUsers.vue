@@ -219,12 +219,21 @@ export default {
     postNewUser () {
       this.dialogNewUser = false
       // post user to db
+      axios
+        .post('http://localhost:3000/user', {
+          name: this.newUser.name,
+          email: this.newUser.email,
+          role: this.newUser.role
+        })
+        .then(response => {
+          console.log(response.data)
+        })
     }
   },
   mounted () {
     // GETTING DATA
     axios
-      .get('http://localhost:3000/getUsers')
+      .get('http://localhost:3000/users')
       .then(response => (this.items = response.data))
   }
 }

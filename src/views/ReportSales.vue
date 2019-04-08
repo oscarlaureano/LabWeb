@@ -340,7 +340,7 @@ export default {
     this.setupChart()
     // GETTING DATA
     axios
-      .get('http://localhost:3000/getSales')
+      .get('http://localhost:3000/sales')
       .then(response => (this.items = response.data))
   }
 }

@@ -296,7 +296,7 @@ export default {
   },
   mounted () {
     // Get product name data
-    axios.get('http://localhost:3000/getProducts')
+    axios.get('http://localhost:3000/products')
       .then(function (response) {
         vm.products = response.data
         console.log(vm.products)
@@ -307,7 +307,7 @@ export default {
 
     // Get production data and initialize chart
     var vm = this
-    axios.get('http://localhost:3000/getProduction')
+    axios.get('http://localhost:3000/production')
       .then(function (response) {
         vm.items = response.data
         vm.items.forEach(function (production) {

@@ -292,7 +292,7 @@ export default {
     this.setupChart()
     // GETTING DATA
     axios
-      .get('http://localhost:3000/getExpenses')
+      .get('http://localhost:3000/expenses')
       .then(response => (this.items = response.data))
   }
 }
