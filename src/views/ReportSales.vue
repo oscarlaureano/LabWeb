@@ -306,7 +306,7 @@ export default {
     },
     saveSale () {
       this.dialogEditSale = false
-       axios
+      axios
         .put(`http://localhost:3000/sale/${this.editingSale.id}`, {
           boxes: this.editingSale.boxes,
           total: this.editingSale.total,
@@ -322,10 +322,10 @@ export default {
     },
     postNewSale () {
       console.log('NEW sale...', this.newSale)
-      this.dialogNewSale = false  
+      this.dialogNewSale = false
       var currentDate = new Date()
       var day = ('0000' + currentDate.getDate()).slice(-2)
-      var month = ('0000' + (currentDate.getMonth()+1)).slice(-2)
+      var month = ('0000' + (currentDate.getMonth() + 1)).slice(-2)
       var year = currentDate.getFullYear().toString()
       var date = year + '-' + month + '-' + day
       // post sale to db

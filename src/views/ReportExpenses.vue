@@ -241,7 +241,7 @@ export default {
     },
     saveExpense () {
       this.dialogEditExpense = false
-       axios
+      axios
         .put(`http://localhost:3000/expense/${this.editingExpense.id}`, {
           type: this.editingExpense.type,
           cost: this.editingExpense.cost,

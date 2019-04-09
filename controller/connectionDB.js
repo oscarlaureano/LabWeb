@@ -25,9 +25,9 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-// Avoiding CORS errors
-var cors = require('cors')
-app.use(cors())
+// // Avoiding CORS errors
+// var cors = require('cors')
+// app.use(cors())
 
 // Obtener los usuarios ( id, Nombre_Completo, Correo, Tipo_Usuario )
 app.get('/users', (req, res) => {
