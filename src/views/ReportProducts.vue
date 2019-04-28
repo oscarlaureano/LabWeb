@@ -1,16 +1,16 @@
 <template>
   <div>
     <v-container fluid>
-      <v-layout justify-center wrap>
+      <v-layout>
         <v-flex md12>
           <v-card full-width>
             <v-card class="floating-card">
               <v-card-text class="">
                 <v-layout>
                   <v-flex class="text-xs-left">
-                    <span class="title font-weight-light card-title">Usuarios</span>
+                    <span class="title font-weight-light card-title">Productos</span>
                     <br>
-                    <span class="font-weight-thin card-subtitle">Manejo de usuarios</span>
+                    <span class="font-weight-thin card-subtitle">Lista de productos</span>
                   </v-flex>
                   <v-flex>
                     <v-text-field
@@ -24,7 +24,7 @@
                     ></v-text-field>
                   </v-flex>
                   <v-flex class="text-xs-right">
-                    <v-btn @click="createUser" color="white" small fab outline>
+                    <v-btn @click="createProduct" color="white" small fab outline>
                       <v-icon>add</v-icon>
                     </v-btn>
                   </v-flex>
@@ -33,13 +33,13 @@
             </v-card>
 
             <v-card-text>
+
               <v-data-table
                 :headers="headers"
                 :items="items"
                 :expand="expand"
                 :search="search"
                 item-key="id"
-                hide-actions
               >
                 <template slot="headerCell" slot-scope="{ header }">
                   <span class="subheading font-weight-light text--darken-3" v-text="header.text"/>
@@ -47,9 +47,8 @@
 
                 <template slot="items" slot-scope="props">
                   <tr @click="props.expanded = !props.expanded">
-                    <td class="text-xs-left">{{ props.item.email }}</td>
-                    <td class="text-xs-center">{{ props.item.name }}</td>
-                    <td class="text-xs-right">{{ props.item.role }}</td>
+                    <td>{{ props.item.name }}</td>
+                    <td>{{ props.item.description }}</td>
                   </tr>
                 </template>
 
@@ -62,7 +61,7 @@
                           <v-btn @click="dialogDelete=true" fab small color="red">
                             <v-icon color="white">delete</v-icon>
                           </v-btn>
-                          <v-btn @click="editUser(props.item)" fab small color="green">
+                          <v-btn @click="editProduct(props.item)" fab small color="green">
                             <v-icon color="white">edit</v-icon>
                           </v-btn>
                         </td>
@@ -77,6 +76,66 @@
       </v-layout>
     </v-container>
 
+    <v-dialog v-model="dialogCreateProduct" max-width="600" persistent>
+      <v-card>
+        <v-card-title class="headline">Crear nuevo producto</v-card-title>
+        <v-card-text>
+          <v-layout>
+            <v-flex xs6 px-2>
+              <v-text-field
+                label="Nombre"
+                v-model="newProduct.name"
+              >
+              </v-text-field>
+            </v-flex>
+
+            <v-flex xs6 px-2>
+              <v-text-field
+                label="Descripción"
+                v-model="newProduct.description"
+              >
+              </v-text-field>
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red" @click="dialogCreateProduct = false">Cancelar</v-btn>
+          <v-btn color="green" @click="postNewProduct">Crear Producto</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="dialogEditProduct" max-width="600" persistent>
+      <v-card>
+        <v-card-title class="headline">Editar</v-card-title>
+        <v-card-text>
+          <v-layout>
+            <v-flex xs6 px-2>
+              <v-text-field
+                label="Nombre"
+                v-model="editingProduct.name"
+              >
+              </v-text-field>
+            </v-flex>
+
+            <v-flex xs6 px-2>
+              <v-text-field
+                label="Descripción"
+                v-model="editingProduct.description"
+              >
+              </v-text-field>
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="saveProduct">Guardar Cambios</v-btn>
+          <v-btn color="green" @click="dialogEditProduct = false">Cancelar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-dialog v-model="dialogDelete" max-width="290" persistent>
       <v-card>
         <v-card-title class="headline">Eliminar</v-card-title>
@@ -89,87 +148,9 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="dialogNewUser" max-width="600" persistent>
-      <v-card>
-        <v-card-title class="headline">Crear Nuevo Usuario</v-card-title>
-        <v-card-text>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Nombre"
-                v-model="newUser.name"
-              >
-              </v-text-field>
-            </v-flex>
-
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Email"
-                v-model="newUser.email"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-select
-                :items="userRoles"
-                v-model="newUser.role"
-                label="Tipo de usuario"
-                required
-                :rules="[() => newUser.role.length > 0 || 'Selecciona un tipo de usuario.']">
-              </v-select>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="red" @click="dialogNewUser = false">Cancelar</v-btn>
-          <v-btn color="green" @click="postNewUser">Crear Usuario</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog v-model="dialogEditUser" max-width="600" persistent>
-      <v-card>
-        <v-card-title class="headline">Editar</v-card-title>
-        <v-card-text>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Nombre"
-                v-model="editingUser.name"
-              >
-              </v-text-field>
-            </v-flex>
-
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Email"
-                v-model="editingUser.email"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Tipo de usuario"
-                v-model="editingUser.role"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn @click="saveUser">Guardar Cambios</v-btn>
-          <v-btn color="green" @click="dialogEditUser = false">Cancelar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
+
 <script>
 import axios from 'axios'
 export default {
@@ -177,90 +158,80 @@ export default {
   },
   data () {
     return {
+      dialogCreateProduct: false,
+      dialogEditProduct: false,
       dialogDelete: false,
-      dialogNewUser: false,
-      dialogEditUser: false,
-      expand: false,
       search: '',
-      editingUser: {},
-      newUser: {
-        role: ''
-      },
+      expand: false,
+      newProduct: {},
+      editingProduct: {},
       headers: [
         {
-          text: 'Email',
-          value: 'email',
-          align: 'left'
-        },
-        {
           text: 'Nombre',
-          value: 'name',
-          align: 'center'
+          value: 'name'
         },
         {
-          text: 'Tipo de usuario',
-          value: 'role',
-          align: 'right'
+          text: 'Descripción',
+          value: 'description'
         }
       ],
-      items: [],
-      userRoles: [
+      items: [
         {
-          text: 'Usuario',
-          value: '0'
+          id: 1,
+          name: 'Tomate',
+          description: 'Tomate saladette híbrido'
         },
         {
-          text: 'Administrador',
-          value: '1'
+          id: 2,
+          name: 'Lechuga',
+          description: 'Lechuga romana nativa de aguascalientes'
+        },
+        {
+          id: 3,
+          name: 'Brocoli',
+          description: 'Brocoli comun'
         }
       ]
     }
   },
   methods: {
-    editUser (user) {
-      this.editingUser.name = user.name
-      this.editingUser.email = user.email
-      this.editingUser.role = user.role
-      this.editingUser.id = user.id
-      this.dialogEditUser = true
+    createProduct () {
+      this.dialogCreateProduct = true
     },
-    saveUser () {
-      this.dialogEditUser = false
-      // update user with id in db
+    editProduct (product) {
+      this.editingProduct.name = product.name
+      this.editingProduct.description = product.description
+      this.dialogEditProduct = true
+    },
+    postNewProduct () {
+      console.log('NEW product...', this.newSale)
+      this.dialogCreateProduct = false
+
+      // post product to db
       axios
-        .put(`http://localhost:3000/user/${this.editingUser.id}`, {
-          name: this.editingUser.name,
-          email: this.editingUser.email,
-          role: this.editingUser.role,
-          pass: 'pass'
+        .post('http://localhost:3000/product', {
+          name: this.newProduct.name,
+          description: this.newProduct.description
         })
         .then(response => {
           console.log(response.data)
         })
     },
-    createUser () {
-      this.dialogNewUser = true
-    },
-    postNewUser () {
-      this.dialogNewUser = false
-      // post user to db
+    saveProduct () {
+      this.dialogEditProduct = false
+      /*
       axios
-        .post('http://localhost:3000/user', {
-          name: this.newUser.name,
-          email: this.newUser.email,
-          role: this.newUser.role,
-          pass: 'pass'
+        .put(`http://localhost:3000/product/${this.editingProduct.id}`, {
+          name: this.editingProduct.name,
+          description: this.editingProduct.description
         })
         .then(response => {
           console.log(response.data)
         })
+      */
     }
   },
   mounted () {
-    // GETTING DATA
-    axios
-      .get('http://localhost:3000/users')
-      .then(response => (this.items = response.data))
   }
 }
 </script>

@@ -23,6 +23,11 @@
                       hide-details
                     ></v-text-field>
                   </v-flex>
+                  <v-flex class="text-xs-right">
+                    <v-btn @click="createProduction" color="white" small fab outline>
+                      <v-icon>add</v-icon>
+                    </v-btn>
+                  </v-flex>
                 </v-layout>
               </v-card-text>
             </v-card>
@@ -125,6 +130,74 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="dialogNewProduction" max-width="600" persistent>
+      <v-card>
+        <v-card-title class="headline">Crear nueva producción</v-card-title>
+        <v-card-text>
+          <v-layout>
+            <v-flex xs6 px-2>
+              <v-menu
+                lazy
+                v-model="initialDate"
+                transition="scale-transition"
+                offset-y
+                full-width
+                :nudge-right="40"
+                max-width="290px"
+                min-width="290px"
+              >
+                <v-text-field
+                  @click="clearDate"
+                  readonly
+                  slot="activator"
+                  label="Fecha de producción"
+                  v-model="formattedDate"
+                  required
+                  :rules="[() => newProduction.date.length > 0 || 'Selecciona una fecha de producción']"
+                ></v-text-field>
+                <v-date-picker
+                v-model="newProduction.date"
+                @input="formattedDate = formatDate($event)"
+                no-title
+                scrollable
+                actions
+                :show-current="false"></v-date-picker>
+              </v-menu>
+            </v-flex>
+
+            <v-flex xs6 px-2>
+              <v-text-field
+                label="# total de cajas"
+                v-model="newProduction.boxes"
+              >
+              </v-text-field>
+            </v-flex>
+          </v-layout>
+          <v-layout>
+            <v-flex xs6 px-2>
+              <v-text-field
+                label="Producto"
+                v-model="newProduction.product"
+              >
+              </v-text-field>
+            </v-flex>
+            <v-flex xs6 px-2>
+              <v-text-field
+                label="KGMS"
+                v-model="newProduction.kgms"
+              >
+              </v-text-field>
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red" @click="dialogNewProduction = false">Cancelar</v-btn>
+          <v-btn color="green" @click="postNewProduct">Crear Venta</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -139,8 +212,14 @@ export default {
   },
   data () {
     return {
+      dialogNewProduction: false,
       dialogDelete: false,
       dialogEditProduction: false,
+      initialDate: false,
+      formattedDate: null,
+      newProduction: {
+        date: ''
+      },
       editingProduction: {},
       expand: false,
       search: '',
@@ -242,6 +321,29 @@ export default {
     }
   },
   methods: {
+    createProduction () {
+      this.dialogNewProduction = true
+    },
+    postNewProduct () {
+      console.log('NEW production...', this.newProduction)
+      this.dialogNewProduction = false
+      var currentDate = new Date()
+      var day = ('0000' + currentDate.getDate()).slice(-2)
+      var month = ('0000' + (currentDate.getMonth() + 1)).slice(-2)
+      var year = currentDate.getFullYear().toString()
+      var date = year + '-' + month + '-' + day
+      // post production to db
+      axios
+        .post('http://localhost:3000/production', {
+          date: date,
+          boxes: this.newProduction.boxes,
+          product: this.newProduction.product,
+          kgms: this.newProduction.kgms
+        })
+        .then(response => {
+          console.log(response.data)
+        })
+    },
     editProduction (production) {
       this.editingProduction.boxes = production.boxes
       this.editingProduction.kgms = production.kgms
@@ -292,6 +394,18 @@ export default {
         ]
       }
       this.productionChart = newChartProduction
+    },
+    clearDate () {
+      this.newProduction.date = ''
+      this.formattedDate = null
+    },
+    formatDate (date) {
+      if (!date) {
+        return null
+      }
+
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
     }
   },
   mounted () {

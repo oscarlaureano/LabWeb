@@ -79,6 +79,11 @@ export default {
           text: 'Producción'
         },
         {
+          to: '/reportProducts',
+          icon: 'restaurant',
+          text: 'Productos'
+        },
+        {
           to: '/reportSales',
           icon: 'attach_money',
           text: 'Ventas'

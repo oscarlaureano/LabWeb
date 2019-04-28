@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Dashboard from './views/Dashboard.vue'
 import ReportExpenses from './views/ReportExpenses.vue'
 import ReportProduction from './views/ReportProduction.vue'
+import ReportProducts from './views/ReportProducts.vue'
 import ReportSales from './views/ReportSales.vue'
 import ReportSensors from './views/ReportSensors.vue'
 import ReportUsers from './views/ReportUsers.vue'
@@ -27,6 +28,11 @@ export default new Router({
       path: '/reportProduction',
       name: 'ReportProduction',
       component: ReportProduction
+    },
+    {
+      path: '/reportProducts',
+      name: 'ReportProducts',
+      component: ReportProducts
     },
     {
       path: '/reportSales',

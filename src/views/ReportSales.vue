@@ -111,13 +111,44 @@
         <v-card-text>
           <v-layout>
             <v-flex xs6 px-2>
+              <v-menu
+                lazy
+                v-model="initialDate"
+                transition="scale-transition"
+                offset-y
+                full-width
+                :nudge-right="40"
+                max-width="290px"
+                min-width="290px"
+              >
+                <v-text-field
+                  @click="clearDate"
+                  readonly
+                  slot="activator"
+                  label="Fecha de venta"
+                  v-model="formattedDate"
+                  required
+                  :rules="[() => newSale.date.length > 0 || 'Selecciona una fecha de venta']"
+                ></v-text-field>
+                <v-date-picker
+                v-model="newSale.date"
+                @input="formattedDate = formatDate($event)"
+                no-title
+                scrollable
+                actions
+                :show-current="false"></v-date-picker>
+              </v-menu>
+            </v-flex>
+
+            <v-flex xs6 px-2>
               <v-text-field
                 label="# total de cajas"
                 v-model="newSale.boxes"
               >
               </v-text-field>
             </v-flex>
-
+          </v-layout>
+          <v-layout>
             <v-flex xs6 px-2>
               <v-text-field
                 label="KGMS"
@@ -125,8 +156,7 @@
               >
               </v-text-field>
             </v-flex>
-          </v-layout>
-          <v-layout>
+
             <v-flex xs6 px-2>
               <v-text-field
                 label="Total $"
@@ -199,9 +229,13 @@ export default {
       dialogDelete: false,
       dialogNewSale: false,
       dialogEditSale: false,
+      initialDate: false,
+      formattedDate: null,
       expand: false,
       editingSale: {},
-      newSale: {},
+      newSale: {
+        date: ''
+      },
       search: '',
       headers: [
         {
@@ -362,6 +396,18 @@ export default {
         ]
       }
       this.salesChart = newChartSales
+    },
+    clearDate () {
+      this.newSale.date = ''
+      this.formattedDate = null
+    },
+    formatDate (date) {
+      if (!date) {
+        return null
+      }
+
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
     }
   },
   mounted () {
