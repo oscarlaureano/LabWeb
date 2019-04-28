@@ -220,7 +220,7 @@ export default {
     editUser (user) {
       this.editingUser.name = user.name
       this.editingUser.email = user.email
-      this.editingUser.role = user.role
+      this.editingUser.role = user.role === 'User'? 0 : 1
       this.editingUser.id = user.id
       this.dialogEditUser = true
     },

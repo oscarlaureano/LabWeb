@@ -201,12 +201,11 @@ export default {
     editProduct (product) {
       this.editingProduct.name = product.name
       this.editingProduct.description = product.description
+      this.editingProduct.id = product.id
       this.dialogEditProduct = true
     },
     postNewProduct () {
-      console.log('NEW product...', this.newSale)
       this.dialogCreateProduct = false
-
       // post product to db
       axios
         .post('http://localhost:3000/product', {
@@ -219,7 +218,7 @@ export default {
     },
     saveProduct () {
       this.dialogEditProduct = false
-      /*
+
       axios
         .put(`http://localhost:3000/product/${this.editingProduct.id}`, {
           name: this.editingProduct.name,
@@ -228,10 +227,20 @@ export default {
         .then(response => {
           console.log(response.data)
         })
-      */
+      
     }
   },
   mounted () {
+    var vm = this
+    axios.get('http://localhost:3000/products')
+      .then(function (response) {
+      //  vm.products = response.data
+        console.log(response.data)
+        vm.items = response.data
+      }, response => {
+        console.log('bad request')
+        console.log(response.data)
+      })
   }
 }
 </script>

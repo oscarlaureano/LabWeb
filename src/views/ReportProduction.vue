@@ -327,15 +327,11 @@ export default {
     postNewProduct () {
       console.log('NEW production...', this.newProduction)
       this.dialogNewProduction = false
-      var currentDate = new Date()
-      var day = ('0000' + currentDate.getDate()).slice(-2)
-      var month = ('0000' + (currentDate.getMonth() + 1)).slice(-2)
-      var year = currentDate.getFullYear().toString()
-      var date = year + '-' + month + '-' + day
+    
       // post production to db
       axios
         .post('http://localhost:3000/production', {
-          date: date,
+          date: this.newProduction.date,
           boxes: this.newProduction.boxes,
           product: this.newProduction.product,
           kgms: this.newProduction.kgms
@@ -347,10 +343,19 @@ export default {
     editProduction (production) {
       this.editingProduction.boxes = production.boxes
       this.editingProduction.kgms = production.kgms
+      this.editingProduction.id = production.id
       this.dialogEditProduction = true
     },
     saveProduction () {
       this.dialogEditProduction = false
+      axios
+        .put(`http://localhost:3000/production/${this.editingProduction.id}`, {
+          boxes: this.editingProduction.boxes,
+          kgms: this.editingProduction.kgms
+        })
+        .then(response => {
+          console.log(response.data)
+        })
     },
     setupChart () {
       var newLabels = []
