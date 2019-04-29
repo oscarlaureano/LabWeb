@@ -6,8 +6,7 @@ const bcrypt = require('bcrypt')
 var config = {
   host: 'localhost',
   user: 'root',
-  port: '3307',
-  password: 'root',
+  password: '',
   database: 'agrotech'
 }
 
@@ -338,16 +337,20 @@ app.put('/product/:id', (req, res) => {
 // Eliminar producto
 app.delete('/product/:id', (req, res) => {
   let id = req.params.id
-  console.log("deleting ", id)
+
   var sql = `DELETE FROM Producto
-    WHERE id_Producto = ${id};`
-  db.query(sql, (err, result) => {
-    if (err) throw err
-    console.log('1 record updated')
-  })
-  res.json({
-    ok: true
-  })
+  WHERE id_Producto = ${id};`
+
+    db.query(sql, (err, result) => {
+      if (!err)
+        console.log('1 record deleted')
+      res.json({
+        ok: !err,
+        err
+      })
+
+    })
+ 
 })
 
 // Eliminar usuario
@@ -408,6 +411,25 @@ app.delete('/sale/:id', (req, res) => {
     ok: true
   })
 })
+
+
+// Eliminar egreso
+app.delete('/expense/:id', (req, res) => {
+  let id = req.params.id
+
+  sql = `DELETE FROM Egresos
+    WHERE id_Egreso = ${id};`
+
+  db.query(sql, (err, result) => {
+    if (err) throw err
+    console.log('1 record deleted')
+  })
+
+  res.json({
+    ok: true
+  })
+})
+
 
 app.listen(process.env.PORT || '3000', () => {
   console.log('Server started on port 3000')

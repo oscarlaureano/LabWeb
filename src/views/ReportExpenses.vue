@@ -59,7 +59,7 @@
                       <tr class="text-xs-left">
                         <td><b>Acciones</b></td>
                         <td>
-                          <v-btn @click="dialogDelete=true" fab small color="red">
+                          <v-btn @click="deleteDialogExpense(props.item)" fab small color="red">
                             <v-icon color="white">delete</v-icon>
                           </v-btn>
                           <v-btn @click="editExpense(props.item)" fab small color="green">
@@ -88,7 +88,7 @@
         <v-card-text>¿Seguro que deseas eliminar este dato?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" @click="dialogDelete = false">Eliminar</v-btn>
+          <v-btn color="red" @click="deleteExpense">Eliminar</v-btn>
           <v-btn color="green" @click="dialogDelete = false">Cancelar</v-btn>
         </v-card-actions>
       </v-card>
@@ -191,6 +191,7 @@ export default {
       expand: false,
       search: '',
       editingExpense: {},
+      deletingExpense: {},
       newExpense: {},
       barChartCycles: {},
       headers: [
@@ -232,6 +233,18 @@ export default {
     }
   },
   methods: {
+    deleteDialogExpense(expense) {
+      this.dialogDelete = true
+      this.deletingExpense = expense
+    },
+    deleteExpense() {
+      this.dialogDelete = false
+       axios
+        .delete(`http://localhost:3000/expense/${this.deletingExpense.id}`)
+        .then(response => {
+          console.log(response.data)
+        })
+    },
     editExpense (expense) {
       this.editingExpense.type = expense.type
       this.editingExpense.cost = expense.cost
