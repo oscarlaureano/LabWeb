@@ -384,6 +384,31 @@ app.delete('/production/:id', (req, res) => {
   })
 })
 
+// Eliminar venta
+app.delete('/sale/:id', (req, res) => {
+  let id = req.params.id
+
+  var sql = `DELETE FROM Venta_Producto
+  WHERE id_Venta = ${id};`
+
+  db.query(sql, (err, result) => {
+    if (err) throw err
+    console.log('n records deleted')
+  })
+
+  sql = `DELETE FROM Venta
+    WHERE id_Venta = ${id};`
+
+  db.query(sql, (err, result) => {
+    if (err) throw err
+    console.log('1 record deleted')
+  })
+
+  res.json({
+    ok: true
+  })
+})
+
 app.listen(process.env.PORT || '3000', () => {
   console.log('Server started on port 3000')
 })
