@@ -353,11 +353,26 @@ app.delete('/product/:id', (req, res) => {
 // Eliminar usuario
 app.delete('/user/:id', (req, res) => {
   let id = req.params.id
-  
-  console.log("deleting ", id)
 
   var sql = `DELETE FROM Usuario
     WHERE id = ${id};`
+
+  db.query(sql, (err, result) => {
+    if (err) throw err
+    console.log('1 record deleted')
+  })
+
+  res.json({
+    ok: true
+  })
+})
+
+// Eliminar producción
+app.delete('/production/:id', (req, res) => {
+  let id = req.params.id
+
+  var sql = `DELETE FROM Produccion
+    WHERE id_Produccion = ${id};`
 
   db.query(sql, (err, result) => {
     if (err) throw err

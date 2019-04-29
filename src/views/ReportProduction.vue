@@ -60,7 +60,7 @@
                       <tr class="text-xs-left">
                         <td><b>Acciones</b></td>
                         <td>
-                          <v-btn @click="dialogDelete=true" fab small color="red">
+                          <v-btn @click="deleteDialogProduction(props.item)" fab small color="red">
                             <v-icon color="white">delete</v-icon>
                           </v-btn>
                           <v-btn @click="editProduction(props.item)" fab small color="green">
@@ -95,7 +95,7 @@
         <v-card-text>¿Seguro que deseas eliminar este dato?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" @click="dialogDelete = false">Eliminar</v-btn>
+          <v-btn color="red" @click="deleteProduction">Eliminar</v-btn>
           <v-btn color="green" @click="dialogDelete = false">Cancelar</v-btn>
         </v-card-actions>
       </v-card>
@@ -221,6 +221,7 @@ export default {
         date: ''
       },
       editingProduction: {},
+      deletingProduction: {},
       expand: false,
       search: '',
       products: [],
@@ -321,11 +322,22 @@ export default {
     }
   },
   methods: {
+    deleteDialogProduction(production) {
+      this.dialogDelete = true
+      this.deletingProduction = production
+    },
+    deleteProduction() {
+      this.dialogDelete = false
+       axios
+        .delete(`http://localhost:3000/production/${this.deletingProduction.id}`)
+        .then(response => {
+          console.log(response.data)
+        })
+    },
     createProduction () {
       this.dialogNewProduction = true
     },
     postNewProduct () {
-      console.log('NEW production...', this.newProduction)
       this.dialogNewProduction = false
     
       // post production to db
