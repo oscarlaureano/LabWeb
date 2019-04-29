@@ -6,7 +6,8 @@ const bcrypt = require('bcrypt')
 var config = {
   host: 'localhost',
   user: 'root',
-  password: '',
+  port: '3307',
+  password: 'root',
   database: 'agrotech'
 }
 
@@ -331,6 +332,40 @@ app.put('/product/:id', (req, res) => {
   res.json({
     ok: true,
     body
+  })
+})
+
+// Eliminar producto
+app.delete('/product/:id', (req, res) => {
+  let id = req.params.id
+  console.log("deleting ", id)
+  var sql = `DELETE FROM Producto
+    WHERE id_Producto = ${id};`
+  db.query(sql, (err, result) => {
+    if (err) throw err
+    console.log('1 record updated')
+  })
+  res.json({
+    ok: true
+  })
+})
+
+// Eliminar usuario
+app.delete('/user/:id', (req, res) => {
+  let id = req.params.id
+  
+  console.log("deleting ", id)
+
+  var sql = `DELETE FROM Usuario
+    WHERE id = ${id};`
+
+  db.query(sql, (err, result) => {
+    if (err) throw err
+    console.log('1 record deleted')
+  })
+
+  res.json({
+    ok: true
   })
 })
 

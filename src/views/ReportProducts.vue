@@ -58,7 +58,7 @@
                       <tr class="text-xs-left">
                         <td><b>Acciones</b></td>
                         <td>
-                          <v-btn @click="dialogDelete=true" fab small color="red">
+                          <v-btn @click="deleteProductDialog(props.item)" fab small color="red">
                             <v-icon color="white">delete</v-icon>
                           </v-btn>
                           <v-btn @click="editProduct(props.item)" fab small color="green">
@@ -142,7 +142,7 @@
         <v-card-text>¿Seguro que deseas eliminar este dato?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" @click="dialogDelete = false">Eliminar</v-btn>
+          <v-btn color="red" @click="deleteProduct">Eliminar</v-btn>
           <v-btn color="green" @click="dialogDelete = false">Cancelar</v-btn>
         </v-card-actions>
       </v-card>
@@ -165,6 +165,7 @@ export default {
       expand: false,
       newProduct: {},
       editingProduct: {},
+      deletingProduct: {},
       headers: [
         {
           text: 'Nombre',
@@ -198,6 +199,19 @@ export default {
     createProduct () {
       this.dialogCreateProduct = true
     },
+    deleteProductDialog (product) {
+      this.deletingProduct.id = product.id
+      this.dialogDelete = true
+    },
+    deleteProduct() {
+      this.dialogDelete = false
+      // post product to db
+      axios
+        .delete(`http://localhost:3000/product/${this.deletingProduct.id}`)
+        .then(response => {
+          console.log(response.data)
+        })
+    },
     editProduct (product) {
       this.editingProduct.name = product.name
       this.editingProduct.description = product.description
@@ -218,7 +232,6 @@ export default {
     },
     saveProduct () {
       this.dialogEditProduct = false
-
       axios
         .put(`http://localhost:3000/product/${this.editingProduct.id}`, {
           name: this.editingProduct.name,
