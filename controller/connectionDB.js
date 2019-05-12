@@ -29,55 +29,28 @@ app.use(bodyParser.json())
 var cors = require('cors')
 app.use(cors())
 
-// Obtener los usuarios ( id, Nombre_Completo, Correo, Tipo_Usuario )
-app.get('/users', (req, res) => {
-  // Avoiding CORS errors
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-
-  // Vars for response
-  var users = []
-  var user
-
-  // Query
-  var sql = 'SELECT id, Nombre_Completo, Correo, Tipo_Usuario FROM usuario'
-
-  db.query(sql, function (err, result, fields) {
-    if (err) throw err
-    // Fetching and formatting data
-    for (var i = 0; i < result.length; i++) {
-      user = { id: result[i].id, name: result[i].Nombre_Completo, email: result[i].Correo, role: result[i].Tipo_Usuario.readInt8() }
-      if (user.role === 1) {
-        user.role = 'Admin'
-      } else {
-        user.role = 'User'
-      }
-      users.push(user)
-    }
-    // Returning answer
-    res.json(users)
-  })
-})
+app.use(require('./routes/user'));
 
 // Obtener los productos ( id_Producto, tipo, descripcion )
 app.get('/products', (req, res) => {
   // Avoiding CORS errors
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-
   // Vars for response
   var products = []
   var product
 
   // Query
-  var sql = 'SELECT id_Producto, tipo, descripcion FROM producto'
+  var sql = 'SELECT id_Producto, estado, tipo, descripcion FROM producto'
 
   db.query(sql, function (err, result, fields) {
     if (err) throw err
     // Fetching and formatting data
     for (var i = 0; i < result.length; i++) {
-      product = { id: result[i].id_Producto, name: result[i].tipo, description: result[i].descripcion }
-      products.push(product)
+      if (result[i].estado) {
+        product = { id: result[i].id_Producto, name: result[i].tipo, description: result[i].descripcion }
+        products.push(product)
+      }
     }
     // Returning answer
     res.json(products)
@@ -158,20 +131,7 @@ app.get('/production', (req, res) => {
   })
 })
 
-// Agregar usuario ( Nombre_Completo, Correo, Contraseña, Tipo_Usuario )
-app.post('/user', (req, res) => {
-  let body = req.body
-  var sql = `INSERT INTO Usuario(Nombre_Completo, Correo, Contraseña, Tipo_Usuario)
-    VALUES ('${body.name}', '${body.email}', '${bcrypt.hashSync(body.pass, 10)}', ${body.role});`
-  db.query(sql, function (err, result) {
-    if (err) throw err
-    console.log('1 record inserted')
-  })
-  res.json({
-    ok: true,
-    body
-  })
-})
+
 
 // Agregar egreso ( Tipo, Costo, Fecha )
 app.post('/expense', (req, res) => {
@@ -206,8 +166,8 @@ app.post('/sale', (req, res) => {
 // Agregar producto ( tipo, descripcion )
 app.post('/product', (req, res) => {
   let body = req.body
-  var sql = `INSERT INTO Producto(tipo, descripcion)
-    VALUES ('${body.name}', '${body.description}');`
+  var sql = `INSERT INTO Producto(estado, tipo, descripcion)
+    VALUES (true, '${body.name}', '${body.description}');`
   db.query(sql, function (err, result) {
     if (err) throw err
     console.log('1 record inserted')
@@ -233,25 +193,7 @@ app.post('/production', (req, res) => {
   })
 })
 
-// Actualizar usuario ( Nombre_Completo, Correo, Contraseña, Tipo_Usuario )
-app.put('/user/:id', (req, res) => {
-  let id = req.params.id
-  let body = req.body
 
-  var sql = `UPDATE Usuario
-    SET Nombre_Completo = '${body.name}', Correo = '${body.email}', 
-    Contraseña = '${bcrypt.hashSync(body.pass, 10)}', Tipo_Usuario = ${body.role}
-    WHERE id = ${id};`
-
-  db.query(sql, (err, result) => {
-    if (err) throw err
-    console.log('1 record updated')
-  })
-  res.json({
-    ok: true,
-    body
-  })
-})
 
 // Actualizar egreso ( Tipo, Costo, Fecha )
 app.put('/expense/:id', (req, res) => {
@@ -337,38 +279,27 @@ app.put('/product/:id', (req, res) => {
 // Eliminar producto
 app.delete('/product/:id', (req, res) => {
   let id = req.params.id
-
+/*
   var sql = `DELETE FROM Producto
   WHERE id_Producto = ${id};`
+*/
 
-    db.query(sql, (err, result) => {
-      if (!err)
-        console.log('1 record deleted')
-      res.json({
-        ok: !err,
-        err
-      })
-
-    })
- 
-})
-
-// Eliminar usuario
-app.delete('/user/:id', (req, res) => {
-  let id = req.params.id
-
-  var sql = `DELETE FROM Usuario
-    WHERE id = ${id};`
+  var sql = `UPDATE Producto
+  SET estado = false
+  WHERE id_Producto = ${id};`
 
   db.query(sql, (err, result) => {
-    if (err) throw err
-    console.log('1 record deleted')
+    if (!err)
+      console.log('1 record deleted')
+    res.json({
+      ok: !err,
+      err
+    })
   })
 
-  res.json({
-    ok: true
-  })
 })
+
+
 
 // Eliminar producción
 app.delete('/production/:id', (req, res) => {
