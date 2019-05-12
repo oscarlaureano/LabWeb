@@ -43,14 +43,14 @@ VALUES ('2019-03-12', 800, 3200, 45);
 INSERT INTO Venta(Fecha, Total_Cajas, Importe, KGMS)
 VALUES ('2019-03-13', 400, 8500, 22);
 
-INSERT INTO Producto(tipo, descripcion)
-VALUES ('Brocoli', 'Brocoli comun');
+INSERT INTO Producto(estado, tipo, descripcion)
+VALUES (true, 'Brocoli', 'Brocoli comun');
 
-INSERT INTO Producto(tipo, descripcion)
-VALUES ('Lechuga', 'Lechuga romana nativa de aguascalientes');
+INSERT INTO Producto(estado, tipo, descripcion)
+VALUES (true, 'Lechuga', 'Lechuga romana nativa de aguascalientes');
 
-INSERT INTO Producto(tipo, descripcion)
-VALUES ('Tomate', 'Tomate saladette híbrido');
+INSERT INTO Producto(estado, tipo, descripcion)
+VALUES (true, 'Tomate', 'Tomate saladette híbrido');
 
 INSERT INTO Venta_Producto(id_Venta, id_Producto)
 VALUES (1,1);

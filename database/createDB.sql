@@ -30,6 +30,7 @@ CREATE TABLE Usuario (
 
 CREATE TABLE Producto (
     id_Producto int NOT NULL AUTO_INCREMENT,
+    estado BOOLEAN,
     tipo varchar(255),
     descripcion varchar(255),
     PRIMARY KEY (id_Producto)

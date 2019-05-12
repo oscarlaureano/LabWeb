@@ -176,23 +176,7 @@ export default {
           value: 'description'
         }
       ],
-      items: [
-        {
-          id: 1,
-          name: 'Tomate',
-          description: 'Tomate saladette híbrido'
-        },
-        {
-          id: 2,
-          name: 'Lechuga',
-          description: 'Lechuga romana nativa de aguascalientes'
-        },
-        {
-          id: 3,
-          name: 'Brocoli',
-          description: 'Brocoli comun'
-        }
-      ]
+      items: []
     }
   },
   methods: {
@@ -247,9 +231,12 @@ export default {
     var vm = this
     axios.get('http://localhost:3000/products')
       .then(function (response) {
-      //  vm.products = response.data
-        console.log(response.data)
-        vm.items = response.data
+        vm.products = []
+        response.data.forEach(product => {
+          if (product.estado) {
+            vm.items.push(product)
+          }
+        });
       }, response => {
         console.log('bad request')
         console.log(response.data)

@@ -29,7 +29,35 @@ app.use(bodyParser.json())
 var cors = require('cors')
 app.use(cors())
 
-app.use(require('./routes/user'));
+// Obtener los usuarios ( id, Nombre_Completo, Correo, Tipo_Usuario )
+app.get('/users', (req, res) => {
+  // Avoiding CORS errors
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+
+  // Vars for response
+  var users = []
+  var user
+
+  // Query
+  var sql = 'SELECT id, Nombre_Completo, Correo, Tipo_Usuario FROM usuario'
+
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err
+    // Fetching and formatting data
+    for (var i = 0; i < result.length; i++) {
+      user = { id: result[i].id, name: result[i].Nombre_Completo, email: result[i].Correo, role: result[i].Tipo_Usuario.readInt8() }
+      if (user.role === 1) {
+        user.role = 'Admin'
+      } else {
+        user.role = 'User'
+      }
+      users.push(user)
+    }
+    // Returning answer
+    res.json(users)
+  })
+})
 
 // Obtener los productos ( id_Producto, tipo, descripcion )
 app.get('/products', (req, res) => {
@@ -47,10 +75,8 @@ app.get('/products', (req, res) => {
     if (err) throw err
     // Fetching and formatting data
     for (var i = 0; i < result.length; i++) {
-      if (result[i].estado) {
-        product = { id: result[i].id_Producto, name: result[i].tipo, description: result[i].descripcion }
+        product = { id: result[i].id_Producto, estado: result[i].estado, name: result[i].tipo, description: result[i].descripcion }
         products.push(product)
-      }
     }
     // Returning answer
     res.json(products)
@@ -123,7 +149,8 @@ app.get('/production', (req, res) => {
     if (err) throw err
     // Fetching and formatting data
     for (var i = 0; i < result.length; i++) {
-      product = { id: result[i].id_Produccion, date: result[i].fecha.toISOString(), boxes: result[i].Total_Cajas, kgms: result[i].KGMS, productID: result[i].id_Producto }
+      product = { id: result[i].id_Produccion, date: result[i].fecha.toISOString(), 
+        boxes: result[i].Total_Cajas, kgms: result[i].KGMS, productID: result[i].id_Producto }
       product.date = product.date.substring(0, 10)
       production.push(product)
     }
@@ -131,7 +158,20 @@ app.get('/production', (req, res) => {
   })
 })
 
-
+// Agregar usuario ( Nombre_Completo, Correo, Contraseña, Tipo_Usuario )
+app.post('/user', (req, res) => {
+  let body = req.body
+  var sql = `INSERT INTO Usuario(Nombre_Completo, Correo, Contraseña, Tipo_Usuario)
+    VALUES ('${body.name}', '${body.email}', '${bcrypt.hashSync(body.pass, 10)}', ${body.role});`
+  db.query(sql, function (err, result) {
+    if (err) throw err
+    console.log('1 record inserted')
+  })
+  res.json({
+    ok: true,
+    body
+  })
+})
 
 // Agregar egreso ( Tipo, Costo, Fecha )
 app.post('/expense', (req, res) => {
@@ -193,7 +233,25 @@ app.post('/production', (req, res) => {
   })
 })
 
+// Actualizar usuario ( Nombre_Completo, Correo, Contraseña, Tipo_Usuario )
+app.put('/user/:id', (req, res) => {
+  let id = req.params.id
+  let body = req.body
 
+  var sql = `UPDATE Usuario
+    SET Nombre_Completo = '${body.name}', Correo = '${body.email}', 
+    Contraseña = '${bcrypt.hashSync(body.pass, 10)}', Tipo_Usuario = ${body.role}
+    WHERE id = ${id};`
+
+  db.query(sql, (err, result) => {
+    if (err) throw err
+    console.log('1 record updated')
+  })
+  res.json({
+    ok: true,
+    body
+  })
+})
 
 // Actualizar egreso ( Tipo, Costo, Fecha )
 app.put('/expense/:id', (req, res) => {
@@ -295,11 +353,27 @@ app.delete('/product/:id', (req, res) => {
       ok: !err,
       err
     })
+
   })
 
 })
 
+// Eliminar usuario
+app.delete('/user/:id', (req, res) => {
+  let id = req.params.id
 
+  var sql = `DELETE FROM Usuario
+    WHERE id = ${id};`
+
+  db.query(sql, (err, result) => {
+    if (err) throw err
+    console.log('1 record deleted')
+  })
+
+  res.json({
+    ok: true
+  })
+})
 
 // Eliminar producción
 app.delete('/production/:id', (req, res) => {
