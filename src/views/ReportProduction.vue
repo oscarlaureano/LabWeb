@@ -104,29 +104,33 @@
     <v-dialog v-model="dialogEditProduction" max-width="600" persistent>
       <v-card>
         <v-card-title class="headline">Editar</v-card-title>
-        <v-card-text>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="# total de cajas"
-                v-model="editingProduction.boxes"
-              >
-              </v-text-field>
-            </v-flex>
+        <v-form v-model="editForm">
+          <v-card-text>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="# total de cajas"
+                  v-model="editingProduction.boxes"
+                  :rules="[() => editingProduction.boxes > 0 || 'Agrega KGMS.']">
+                >
+                </v-text-field>
+              </v-flex>
 
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="KGMS"
-                v-model="editingProduction.kgms"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="KGMS"
+                  v-model="editingProduction.kgms"
+                  :rules="[() => editingProduction.kgms > 0 || 'Agrega KGMS.']">
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="saveProduction">Guardar Cambios</v-btn>
-          <v-btn color="green" @click="dialogEditProduction = false">Cancelar</v-btn>
+          <v-btn @click="dialogEditProduction = false">Cancelar</v-btn>
+          <v-btn color="green" @click="saveProduction" :disabled="!editForm">Guardar Cambios</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -134,69 +138,73 @@
     <v-dialog v-model="dialogNewProduction" max-width="600" persistent>
       <v-card>
         <v-card-title class="headline">Crear nueva producción</v-card-title>
-        <v-card-text>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-menu
-                lazy
-                v-model="initialDate"
-                transition="scale-transition"
-                offset-y
-                full-width
-                :nudge-right="40"
-                max-width="290px"
-                min-width="290px"
-              >
-                <v-text-field
-                  @click="clearDate"
-                  readonly
-                  slot="activator"
-                  label="Fecha de producción"
-                  v-model="formattedDate"
-                  required
-                  :rules="[() => newProduction.date.length > 0 || 'Selecciona una fecha de producción']"
-                ></v-text-field>
-                <v-date-picker
-                v-model="newProduction.date"
-                @input="formattedDate = formatDate($event)"
-                no-title
-                scrollable
-                actions
-                :show-current="false"></v-date-picker>
-              </v-menu>
-            </v-flex>
+        <v-form v-model="createForm">
+          <v-card-text>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-menu
+                  lazy
+                  v-model="initialDate"
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  :nudge-right="40"
+                  max-width="290px"
+                  min-width="290px"
+                >
+                  <v-text-field
+                    @click="clearDate"
+                    readonly
+                    slot="activator"
+                    label="Fecha de producción"
+                    v-model="formattedDate"
+                    required
+                    :rules="[() => newProduction.date.length > 0 || 'Selecciona una fecha de producción']"
+                  ></v-text-field>
+                  <v-date-picker
+                  v-model="newProduction.date"
+                  @input="formattedDate = formatDate($event)"
+                  no-title
+                  scrollable
+                  actions
+                  :show-current="false"></v-date-picker>
+                </v-menu>
+              </v-flex>
 
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="# total de cajas"
-                v-model="newProduction.boxes"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-select
-                :items="productOptions"
-                v-model="newProduction.product"
-                label="Producto"
-                required
-                :rules="[() => newProduction.product > 0 || 'Selecciona un producto.']">
-              </v-select>
-            </v-flex>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="KGMS"
-                v-model="newProduction.kgms"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="# total de cajas"
+                  v-model="newProduction.boxes"
+                  :rules="[() => newProduction.boxes > 0 || 'Agrega un # de cajas.']"
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-select
+                  :items="productOptions"
+                  v-model="newProduction.product"
+                  label="Producto"
+                  required
+                  :rules="[() => newProduction.product > 0 || 'Selecciona un producto.']">
+                </v-select>
+              </v-flex>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="KGMS"
+                  v-model="newProduction.kgms"
+                  :rules="[() => newProduction.kgms > 0 || 'Agrega KGMS.']">
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" @click="dialogNewProduction = false">Cancelar</v-btn>
-          <v-btn color="green" @click="postNewProduct">Crear Venta</v-btn>
+          <v-btn color="green" @click="postNewProduct" :disabled="!createForm">Crear Venta</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -216,11 +224,14 @@ export default {
       dialogNewProduction: false,
       dialogDelete: false,
       dialogEditProduction: false,
+      createForm: false,
+      editForm: false,
       initialDate: false,
       formattedDate: null,
       newProduction: {
         date: '',
-        product: ''
+        product: '',
+        boxes: ''
       },
       editingProduction: {},
       deletingProduction: {},

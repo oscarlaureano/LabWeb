@@ -97,39 +97,45 @@
     <v-dialog v-model="dialogNewExpense" max-width="600" persistent>
       <v-card>
         <v-card-title class="headline">Crear Nuevo Egreso</v-card-title>
-        <v-card-text>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Tipo"
-                v-model="newExpense.type"
-              >
-              </v-text-field>
-            </v-flex>
+        <v-form v-model="createForm">
+          <v-card-text>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Tipo"
+                  v-model="newExpense.type"
+                  required :rules="[() => newExpense.type.length > 0 || 'Agrega un tipo de egreso.']"
+                >
+                </v-text-field>
+              </v-flex>
 
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Costo"
-                v-model="newExpense.cost"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Fecha"
-                type="date"
-                v-model="newExpense.date"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Costo"
+                  v-model="newExpense.cost"
+                  required :rules="[() => newExpense.cost > 0|| 'Agrega un costo.']"
+                  type="number"
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Fecha"
+                  type="date"
+                  v-model="newExpense.date"
+                  required :rules="[() => newExpense.date.length > 0 || 'Agrega una fecha.']"
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" @click="dialogNewExpense = false">Cancelar</v-btn>
-          <v-btn color="green" @click="postNewExpense">Crear Egreso</v-btn>
+          <v-btn color="green" @click="postNewExpense" :disabled="!createForm">Crear Egreso</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -137,39 +143,45 @@
     <v-dialog v-model="dialogEditExpense" max-width="600" persistent>
       <v-card>
         <v-card-title class="headline">Editar</v-card-title>
-        <v-card-text>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Tipo"
-                v-model="editingExpense.type"
-              >
-              </v-text-field>
-            </v-flex>
+        <v-form v-model="editForm">
+          <v-card-text>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Tipo"
+                  v-model="editingExpense.type"
+                  required :rules="[() => editingExpense.type.length > 0 || 'Agrega un tipo de egreso.']"
+                >
+                </v-text-field>
+              </v-flex>
 
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Costo"
-                v-model="editingExpense.cost"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Fecha"
-                type="date"
-                v-model="editingExpense.date"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Costo"
+                  v-model="editingExpense.cost"
+                  required :rules="[() => editingExpense.cost > 0 || 'Agrega un costo.']"
+                  type="number"
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Fecha"
+                  type="date"
+                  v-model="editingExpense.date"
+                  required :rules="[() => editingExpense.date.length > 0 || 'Agrega una fecha']"
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="saveExpense">Guardar Cambios</v-btn>
-          <v-btn color="green" @click="dialogEditExpense = false">Cancelar</v-btn>
+          <v-btn @click="dialogEditExpense = false">Cancelar</v-btn>
+          <v-btn color="green" @click="saveExpense" :disabled="!editForm">Guardar Cambios</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -187,11 +199,21 @@ export default {
       dialogDelete: false,
       dialogNewExpense: false,
       dialogEditExpense: false,
+      createForm: false,
+      editForm: false,
       expand: false,
       search: '',
-      editingExpense: {},
+      editingExpense: {
+        type: '',
+        cost: 0,
+        date: ''
+      },
       deletingExpense: {},
-      newExpense: {},
+      newExpense: {
+        type: '',
+        cost: null,
+        date: ''
+      },
       barChartCycles: {},
       headers: [
         {
@@ -245,6 +267,7 @@ export default {
       })
     },
     editExpense (expense) {
+      console.log('editexpense', expense)
       this.editingExpense.type = expense.type
       this.editingExpense.cost = expense.cost
       this.editingExpense.date = expense.date

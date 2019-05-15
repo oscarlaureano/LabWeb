@@ -108,68 +108,73 @@
     <v-dialog v-model="dialogNewSale" max-width="600" persistent>
       <v-card>
         <v-card-title class="headline">Crear nueva venta</v-card-title>
-        <v-card-text>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-menu
-                lazy
-                v-model="initialDate"
-                transition="scale-transition"
-                offset-y
-                full-width
-                :nudge-right="40"
-                max-width="290px"
-                min-width="290px"
-              >
+        <v-form v-model="createForm">
+          <v-card-text>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-menu
+                  lazy
+                  v-model="initialDate"
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  :nudge-right="40"
+                  max-width="290px"
+                  min-width="290px"
+                >
+                  <v-text-field
+                    @click="clearDate"
+                    readonly
+                    slot="activator"
+                    label="Fecha de venta"
+                    v-model="formattedDate"
+                    required
+                    :rules="[() => newSale.date.length > 0 || 'Selecciona una fecha de venta']"
+                  ></v-text-field>
+                  <v-date-picker
+                  v-model="newSale.date"
+                  @input="formattedDate = formatDate($event)"
+                  no-title
+                  scrollable
+                  actions
+                  :show-current="false"></v-date-picker>
+                </v-menu>
+              </v-flex>
+
+              <v-flex xs6 px-2>
                 <v-text-field
-                  @click="clearDate"
-                  readonly
-                  slot="activator"
-                  label="Fecha de venta"
-                  v-model="formattedDate"
-                  required
-                  :rules="[() => newSale.date.length > 0 || 'Selecciona una fecha de venta']"
-                ></v-text-field>
-                <v-date-picker
-                v-model="newSale.date"
-                @input="formattedDate = formatDate($event)"
-                no-title
-                scrollable
-                actions
-                :show-current="false"></v-date-picker>
-              </v-menu>
-            </v-flex>
+                  label="# total de cajas"
+                  v-model="newSale.boxes"
+                  :rules="[() => newSale.boxes > 0 || 'Agrega un numero de cajas.']"
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="KGMS"
+                  v-model="newSale.kgms"
+                  :rules="[() => newSale.kgms > 0 || 'Agrega KGMS.']"
+                >
+                </v-text-field>
+              </v-flex>
 
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="# total de cajas"
-                v-model="newSale.boxes"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="KGMS"
-                v-model="newSale.kgms"
-              >
-              </v-text-field>
-            </v-flex>
-
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Total $"
-                v-model="newSale.total"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Total $"
+                  v-model="newSale.total"
+                  :rules="[() => newSale.total > 0 || 'Agrega un total.']"
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" @click="dialogNewSale = false">Cancelar</v-btn>
-          <v-btn color="green" @click="postNewSale">Crear Venta</v-btn>
+          <v-btn color="green" @click="postNewSale" :disabled="!createForm">Crear Venta</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -177,38 +182,43 @@
     <v-dialog v-model="dialogEditSale" max-width="600" persistent>
       <v-card>
         <v-card-title class="headline">Editar</v-card-title>
-        <v-card-text>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="# total de cajas"
-                v-model="editingSale.boxes"
-              >
-              </v-text-field>
-            </v-flex>
+        <v-form v-model="editForm">
+          <v-card-text>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="# total de cajas"
+                  v-model="editingSale.boxes"
+                  :rules="[() => editingSale.boxes > 0 || 'Agrega un numero de cajas.']"
+                >
+                </v-text-field>
+              </v-flex>
 
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="KGMS"
-                v-model="editingSale.kgms"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Total $"
-                v-model="editingSale.total"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="KGMS"
+                  v-model="editingSale.kgms"
+                  :rules="[() => editingSale.kgms > 0 || 'Agrega KGMS.']"
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Total $"
+                  v-model="editingSale.total"
+                  :rules="[() => editingSale.total > 0 || 'Agrega un total.']"
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="dialogEditSale = false">Cancelar</v-btn>
-          <v-btn color="green" @click="saveSale">Guardar Cambios</v-btn>
+          <v-btn color="green" @click="saveSale" :disabled="!editForm">Guardar Cambios</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -228,13 +238,23 @@ export default {
       dialogDelete: false,
       dialogNewSale: false,
       dialogEditSale: false,
+      createForm: false,
+      editForm: false,
       initialDate: false,
       formattedDate: null,
       expand: false,
-      editingSale: {},
+      editingSale: {
+        date: '',
+        boxes: null,
+        kgms: null,
+        total: null
+      },
       deletingSale: {},
       newSale: {
-        date: ''
+        date: '',
+        boxes: null,
+        kgms: null,
+        total: null
       },
       search: '',
       headers: [

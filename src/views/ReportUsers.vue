@@ -92,40 +92,45 @@
     <v-dialog v-model="dialogNewUser" max-width="600" persistent>
       <v-card>
         <v-card-title class="headline">Crear Nuevo Usuario</v-card-title>
-        <v-card-text>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Nombre"
-                v-model="newUser.name"
-              >
-              </v-text-field>
-            </v-flex>
+        <v-form v-model="createForm">
+          <v-card-text>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Nombre"
+                  v-model="newUser.name"
+                  :rules="[() => newUser.name.length > 0 || 'Agrega un nombre.']"
+                >
+                </v-text-field>
+              </v-flex>
 
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Email"
-                v-model="newUser.email"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-select
-                :items="userRoles"
-                v-model="newUser.role"
-                label="Tipo de usuario"
-                required
-                :rules="[() => newUser.role.length > 0 || 'Selecciona un tipo de usuario.']">
-              </v-select>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Email"
+                  v-model="newUser.email"
+                  :rules="[() => newUser.email.length > 0 || 'Agrega un email.']"
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-select
+                  :items="userRoles"
+                  v-model="newUser.role"
+                  label="Tipo de usuario"
+                  required
+                  :rules="[() => newUser.role.length > 0 || 'Selecciona un tipo de usuario.']"
+                >
+                </v-select>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" @click="dialogNewUser = false">Cancelar</v-btn>
-          <v-btn color="green" @click="postNewUser">Crear Usuario</v-btn>
+          <v-btn color="green" @click="postNewUser" :disabled="!createForm">Crear Usuario</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -133,40 +138,44 @@
     <v-dialog v-model="dialogEditUser" max-width="600" persistent>
       <v-card>
         <v-card-title class="headline">Editar</v-card-title>
-        <v-card-text>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Nombre"
-                v-model="editingUser.name"
-              >
-              </v-text-field>
-            </v-flex>
+        <v-form v-model="editForm">
+          <v-card-text>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Nombre"
+                  v-model="editingUser.name"
+                  :rules="[() => editingUser.name.length > 0 || 'Agrega un nombre.']"
+                >
+                </v-text-field>
+              </v-flex>
 
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Email"
-                v-model="editingUser.email"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-select
-                :items="userRoles"
-                v-model="editingUser.role"
-                label="Tipo de usuario"
-                required
-                :rules="[() => editingUser.role.length > 0 || 'Selecciona un tipo de usuario.']">
-              </v-select>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Email"
+                  v-model="editingUser.email"
+                  :rules="[() => editingUser.email.length > 0 || 'Agrega un email.']"
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-select
+                  :items="userRoles"
+                  v-model="editingUser.role"
+                  label="Tipo de usuario"
+                  required
+                  :rules="[() => editingUser.role.length > 0 || 'Selecciona un tipo de usuario.']">
+                </v-select>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="dialogEditUser = false">Cancelar</v-btn>
-          <v-btn color="green" @click="saveUser">Guardar Cambios</v-btn>
+          <v-btn color="green" @click="saveUser" :disabled="!editForm">Guardar Cambios</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -181,14 +190,20 @@ export default {
       dialogDelete: false,
       dialogNewUser: false,
       dialogEditUser: false,
+      createForm: false,
+      editForm: false,
       expand: false,
       search: '',
       editingUser: {
+        name: '',
+        email: '',
         pass: 'pass',
         role: ''
       },
       deletingUser: {},
       newUser: {
+        name: '',
+        email: '',
         role: '',
         pass: 'pass'
       },

@@ -79,29 +79,33 @@
     <v-dialog v-model="dialogCreateProduct" max-width="600" persistent>
       <v-card>
         <v-card-title class="headline">Crear nuevo producto</v-card-title>
-        <v-card-text>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Nombre"
-                v-model="newProduct.name"
-              >
-              </v-text-field>
-            </v-flex>
+        <v-form v-model="createForm">
+          <v-card-text>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Nombre"
+                  v-model="newProduct.name"
+                  :rules="[() => newProduct.name.length > 0 || 'Agrega un nombre.']"
+                >
+                </v-text-field>
+              </v-flex>
 
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Descripción"
-                v-model="newProduct.description"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Descripción"
+                  v-model="newProduct.description"
+                  :rules="[() => newProduct.description.length > 0 || 'Agrega una descipción.']"
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" @click="dialogCreateProduct = false">Cancelar</v-btn>
-          <v-btn color="green" @click="postNewProduct">Crear Producto</v-btn>
+          <v-btn color="green" @click="postNewProduct" :disabled="!createForm">Crear Producto</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -109,29 +113,33 @@
     <v-dialog v-model="dialogEditProduct" max-width="600" persistent>
       <v-card>
         <v-card-title class="headline">Editar</v-card-title>
-        <v-card-text>
-          <v-layout>
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Nombre"
-                v-model="editingProduct.name"
-              >
-              </v-text-field>
-            </v-flex>
+        <v-form v-model="editForm">
+          <v-card-text>
+            <v-layout>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Nombre"
+                  v-model="editingProduct.name"
+                  :rules="[() => editingProduct.name.length > 0 || 'Agrega un nombre.']"
+                >
+                </v-text-field>
+              </v-flex>
 
-            <v-flex xs6 px-2>
-              <v-text-field
-                label="Descripción"
-                v-model="editingProduct.description"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
+              <v-flex xs6 px-2>
+                <v-text-field
+                  label="Descripción"
+                  v-model="editingProduct.description"
+                  :rules="[() => editingProduct.description.length > 0 || 'Agrega una descipción.']"
+                >
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="saveProduct">Guardar Cambios</v-btn>
-          <v-btn color="green" @click="dialogEditProduct = false">Cancelar</v-btn>
+          <v-btn @click="dialogEditProduct = false">Cancelar</v-btn>
+          <v-btn color="green" @click="saveProduct" :disabled="!editForm">Guardar Cambios</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -161,10 +169,18 @@ export default {
       dialogCreateProduct: false,
       dialogEditProduct: false,
       dialogDelete: false,
+      createForm: false,
+      editForm: false,
       search: '',
       expand: false,
-      newProduct: {},
-      editingProduct: {},
+      newProduct: {
+        name: '',
+        description: ''
+      },
+      editingProduct: {
+        name: '',
+        description: ''
+      },
       deletingProduct: {},
       headers: [
         {
