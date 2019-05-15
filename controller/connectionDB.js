@@ -197,14 +197,25 @@ app.post('/expense', (req, res) => {
   })
 })
 
-// Agregar venta ( Fecha, Total_Cajas, Importe, KGMS )
+// Agregar venta ( Fecha, Total_Cajas, Importe, KGMS, ProductosIds )
 app.post('/sale', (req, res) => {
   let body = req.body
   var sql = `INSERT INTO Venta(Fecha, Total_Cajas, Importe, KGMS)
     VALUES ('${body.date}', ${body.boxes}, ${body.total}, ${body.kgms});`
+
+  var productsIds = body.products
+
   db.query(sql, function (err, result) {
     if (err) throw err
-    console.log('1 record inserted')
+    console.log('1 record inserted', result)
+    productsIds.forEach((productId) => {
+      var sqlProdSale = `INSERT INTO Venta_Producto(id_Venta, id_Producto) 
+      VALUES (${result.insertId}, ${productId});`
+      db.query(sqlProdSale, function (err, result) {
+        if (err) throw err
+        console.log('1 record inserted')
+      })
+    })
   })
   res.json({
     ok: true,
