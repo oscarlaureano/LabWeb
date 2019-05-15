@@ -58,7 +58,7 @@
                     <table class="full-width-table">
                       <tr class="text-xs-left">
                         <td><b>Producto tipo</b></td>
-                        <td>{{ props.item.product }}</td>
+                        <td>{{ props.item.products[0] }}</td>
                       </tr>
 
                       <tr class="text-xs-left">
@@ -261,38 +261,7 @@ export default {
         }
       ],
       items: [
-        {
-          id: 1,
-          date: moment(new Date('1/18/2019 07:28')).format('MMMM YYYY'),
-          boxes: 35,
-          kgms: 1200,
-          total: 2400,
-          product: 'tomate'
-        },
-        {
-          id: 2,
-          date: moment(new Date('3/02/2019 07:28')).format('MMMM YYYY'),
-          boxes: 12,
-          kgms: 310,
-          total: 620,
-          product: 'tomate'
-        },
-        {
-          id: 3,
-          date: moment(new Date('3/05/2019 07:28')).format('MMMM YYYY'),
-          boxes: 1,
-          kgms: 50,
-          total: 100,
-          product: 'lechuga'
-        },
-        {
-          id: 4,
-          date: moment(new Date('4/02/2019 07:28')).format('MMMM YYYY'),
-          boxes: 10,
-          kgms: 5000,
-          total: 10000,
-          product: 'brocoli'
-        }
+        
       ],
       chartOptions: {
         scales: {
@@ -422,7 +391,10 @@ export default {
     // GETTING DATA
     axios
       .get('http://localhost:3000/sales')
-      .then(response => (this.items = response.data))
+      .then(response => {
+        console.log("p", response.data, "p")
+        this.items = response.data
+      })
   }
 }
 </script>

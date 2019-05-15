@@ -118,17 +118,26 @@ app.get('/sales', (req, res) => {
   var sales = []
   var sale
 
-  // Query
-//  var sql = 'SELECT v.id_Venta, v.Fecha, v.Total_Cajas, v.KGMS, v.Importe, p.tipo FROM venta v INNER JOIN venta_producto e on v.id_Venta = e.id_Venta INNER JOIN producto p on e. id_Producto = p.id_Producto'
-  var sql = 'SELECT id_Venta, Fecha, Total_Cajas, KGMS, Importe FROM venta'
-  db.query(sql, function (err, result, fields) {
+  var query = `SELECT venta.id_venta, venta.Importe, venta.KGMS, venta.Total_Cajas, venta.Fecha, venta_producto.id_Producto, producto.tipo FROM venta_producto INNER JOIN producto INNER JOIN venta ON producto.id_Producto = venta_producto.id_Producto AND venta_producto.id_Venta = venta.id_Venta`
+  db.query(query, function (err, result, fields) {
     if (err) throw err
-    // Fetching and formatting data
+    var ids = []
     for (var i = 0; i < result.length; i++) {
-      sale = { id: result[i].id_Venta, date: result[i].Fecha.toISOString(), boxes: result[i].Total_Cajas, kgms: result[i].KGMS, total: result[i].Importe}//, product: result[i].tipo }
-      sale.date = sale.date.substring(0, 10)
-      sales.push(sale)
+      if (ids.indexOf(result[i].id_venta) === -1) {
+        sale = { id: result[i].id_venta, date: result[i].Fecha.toISOString(), boxes: result[i].Total_Cajas, kgms: result[i].KGMS, total: result[i].Importe, products: [] }
+        sales.push(sale)
+        ids.push(result[i].id_venta)
+      }
     }
+
+    for (var j = 0; j < sales.length; j++) {
+      result.map((saleProd) => {
+        if (saleProd.id_venta === sales[j].id) {
+          sales[j].products.push(saleProd.tipo)
+        }
+      })
+    }
+    console.log(sales)
     res.json(sales)
   })
 })
