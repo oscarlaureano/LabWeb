@@ -218,13 +218,13 @@ export default {
     }
   },
   methods: {
-    deleteDialogUser(user) {
+    deleteDialogUser (user) {
       this.dialogDelete = true
       this.deletingUser = user
     },
-    deleteUser() {
+    deleteUser () {
       this.dialogDelete = false
-       axios
+      axios
         .delete(`http://localhost:3000/user/${this.deletingUser.id}`)
         .then(response => {
           console.log(response.data)
@@ -233,7 +233,7 @@ export default {
     editUser (user) {
       this.editingUser.name = user.name
       this.editingUser.email = user.email
-      this.editingUser.role = user.role === 'User'? 0 : 1
+      this.editingUser.role = user.role === 'User' ? 0 : 1
       this.editingUser.id = user.id
       this.dialogEditUser = true
     },

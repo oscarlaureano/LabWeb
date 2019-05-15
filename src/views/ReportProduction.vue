@@ -322,13 +322,13 @@ export default {
     }
   },
   methods: {
-    deleteDialogProduction(production) {
+    deleteDialogProduction (production) {
       this.dialogDelete = true
       this.deletingProduction = production
     },
-    deleteProduction() {
+    deleteProduction () {
       this.dialogDelete = false
-       axios
+      axios
         .delete(`http://localhost:3000/production/${this.deletingProduction.id}`)
         .then(response => {
           console.log(response.data)
@@ -339,7 +339,6 @@ export default {
     },
     postNewProduct () {
       this.dialogNewProduction = false
-    
       // post production to db
       axios
         .post('http://localhost:3000/production', {

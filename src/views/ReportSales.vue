@@ -331,13 +331,13 @@ export default {
     }
   },
   methods: {
-    deleteDialogProduction(production) {
+    deleteDialogProduction (production) {
       this.dialogDelete = true
       this.deletingSale = production
     },
-    deleteProduction() {
+    deleteProduction () {
       this.dialogDelete = false
-       axios
+      axios
         .delete(`http://localhost:3000/sale/${this.deletingSale.id}`)
         .then(response => {
           console.log(response.data)

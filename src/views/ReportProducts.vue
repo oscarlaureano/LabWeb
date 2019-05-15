@@ -187,7 +187,7 @@ export default {
       this.deletingProduct.id = product.id
       this.dialogDelete = true
     },
-    deleteProduct() {
+    deleteProduct () {
       this.dialogDelete = false
       // post product to db
       axios
@@ -224,7 +224,6 @@ export default {
         .then(response => {
           console.log(response.data)
         })
-      
     }
   },
   mounted () {
@@ -236,7 +235,7 @@ export default {
           if (product.estado) {
             vm.items.push(product)
           }
-        });
+        })
       }, response => {
         console.log('bad request')
         console.log(response.data)

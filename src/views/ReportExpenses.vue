@@ -233,13 +233,13 @@ export default {
     }
   },
   methods: {
-    deleteDialogExpense(expense) {
+    deleteDialogExpense (expense) {
       this.dialogDelete = true
       this.deletingExpense = expense
     },
-    deleteExpense() {
+    deleteExpense () {
       this.dialogDelete = false
-       axios
+      axios
         .delete(`http://localhost:3000/expense/${this.deletingExpense.id}`)
         .then(response => {
           console.log(response.data)
