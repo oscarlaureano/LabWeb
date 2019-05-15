@@ -153,25 +153,26 @@
           </v-layout>
           <v-layout>
             <v-flex xs6 px-2>
-              <v-text-field
-                label="Tipo de usuario"
+              <v-select
+                :items="userRoles"
                 v-model="editingUser.role"
-              >
-              </v-text-field>
+                label="Tipo de usuario"
+                required
+                :rules="[() => editingUser.role.length > 0 || 'Selecciona un tipo de usuario.']">
+              </v-select>
             </v-flex>
           </v-layout>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="saveUser">Guardar Cambios</v-btn>
-          <v-btn color="green" @click="dialogEditUser = false">Cancelar</v-btn>
+          <v-btn @click="dialogEditUser = false">Cancelar</v-btn>
+          <v-btn color="green" @click="saveUser">Guardar Cambios</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
 </template>
 <script>
-import axios from 'axios'
 export default {
   components: {
   },
@@ -182,10 +183,14 @@ export default {
       dialogEditUser: false,
       expand: false,
       search: '',
-      editingUser: {},
+      editingUser: {
+        pass: 'pass',
+        role: ''
+      },
       deletingUser: {},
       newUser: {
-        role: ''
+        role: '',
+        pass: 'pass'
       },
       headers: [
         {
@@ -224,32 +229,27 @@ export default {
     },
     deleteUser () {
       this.dialogDelete = false
-      axios
-        .delete(`http://localhost:3000/user/${this.deletingUser.id}`)
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.delete('user/' + this.deletingUser.id).then(response => {
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
     },
     editUser (user) {
       this.editingUser.name = user.name
       this.editingUser.email = user.email
-      this.editingUser.role = user.role === 'User' ? 0 : 1
+      this.editingUser.role = user.role === 'User' ? '0' : '1'
       this.editingUser.id = user.id
       this.dialogEditUser = true
     },
     saveUser () {
       this.dialogEditUser = false
       // update user with id in db
-      axios
-        .put(`http://localhost:3000/user/${this.editingUser.id}`, {
-          name: this.editingUser.name,
-          email: this.editingUser.email,
-          role: this.editingUser.role,
-          pass: 'pass'
-        })
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.put('user/' + this.editingUser.id, this.editingUser).then(response => {
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
     },
     createUser () {
       this.dialogNewUser = true
@@ -257,23 +257,21 @@ export default {
     postNewUser () {
       this.dialogNewUser = false
       // post user to db
-      axios
-        .post('http://localhost:3000/user', {
-          name: this.newUser.name,
-          email: this.newUser.email,
-          role: this.newUser.role,
-          pass: 'pass'
-        })
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.post('user', this.newUser).then(response => {
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
     }
   },
   mounted () {
     // GETTING DATA
-    axios
-      .get('http://localhost:3000/users')
-      .then(response => (this.items = response.data))
+    this.$http.get('users').then(response => {
+      this.items = response.data
+      console.log(response.data)
+    }, response => {
+      console.log(response.data)
+    })
   }
 }
 </script>

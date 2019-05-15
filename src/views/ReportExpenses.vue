@@ -129,7 +129,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" @click="dialogNewExpense = false">Cancelar</v-btn>
-          <v-btn color="green" @click="postNewExpense">Crear Usuario</v-btn>
+          <v-btn color="green" @click="postNewExpense">Crear Egreso</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -178,7 +178,6 @@
 
 <script>
 import ChartBar from '../components/ChartBar.js'
-import axios from 'axios'
 export default {
   components: {
     ChartBar
@@ -239,11 +238,11 @@ export default {
     },
     deleteExpense () {
       this.dialogDelete = false
-      axios
-        .delete(`http://localhost:3000/expense/${this.deletingExpense.id}`)
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.delete('expense/' + this.deletingExpense.id).then(response => {
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
     },
     editExpense (expense) {
       this.editingExpense.type = expense.type
@@ -254,15 +253,11 @@ export default {
     },
     saveExpense () {
       this.dialogEditExpense = false
-      axios
-        .put(`http://localhost:3000/expense/${this.editingExpense.id}`, {
-          type: this.editingExpense.type,
-          cost: this.editingExpense.cost,
-          date: this.editingExpense.date
-        })
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.put('expense/' + this.editingExpense.id, this.editingExpense).then(response => {
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
     },
     createExpense () {
       this.dialogNewExpense = true
@@ -270,15 +265,11 @@ export default {
     postNewExpense () {
       this.dialogNewExpense = false
       // post Expense to db
-      axios
-        .post('http://localhost:3000/expense', {
-          type: this.newExpense.type,
-          cost: this.newExpense.cost,
-          date: this.newExpense.date
-        })
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.post('expense', this.newExpense).then(response => {
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
     },
     setupChart () {
       var newChartExpenses = {
@@ -322,9 +313,12 @@ export default {
   mounted () {
     this.setupChart()
     // GETTING DATA
-    axios
-      .get('http://localhost:3000/expenses')
-      .then(response => (this.items = response.data))
+    this.$http.get('expenses').then(response => {
+      this.items = response.data
+      console.log(response.data)
+    }, response => {
+      console.log(response.data)
+    })
   }
 }
 </script>

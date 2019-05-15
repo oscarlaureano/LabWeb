@@ -207,8 +207,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="saveSale">Guardar Cambios</v-btn>
-          <v-btn color="green" @click="dialogEditSale = false">Cancelar</v-btn>
+          <v-btn @click="dialogEditSale = false">Cancelar</v-btn>
+          <v-btn color="green" @click="saveSale">Guardar Cambios</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -217,7 +217,6 @@
 
 <script>
 import ChartLine from '../components/ChartLine.js'
-import axios from 'axios'
 var moment = require('moment')
 moment.locale('es')
 export default {
@@ -260,9 +259,7 @@ export default {
           align: 'right'
         }
       ],
-      items: [
-        
-      ],
+      items: [],
       chartOptions: {
         scales: {
           yAxes: [
@@ -306,11 +303,11 @@ export default {
     },
     deleteProduction () {
       this.dialogDelete = false
-      axios
-        .delete(`http://localhost:3000/sale/${this.deletingSale.id}`)
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.delete('sale/' + this.deletingSale.id).then(response => {
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
     },
     editSale (sale) {
       this.editingSale.boxes = sale.boxes
@@ -322,16 +319,11 @@ export default {
     },
     saveSale () {
       this.dialogEditSale = false
-      axios
-        .put(`http://localhost:3000/sale/${this.editingSale.id}`, {
-          boxes: this.editingSale.boxes,
-          total: this.editingSale.total,
-          kgms: this.editingSale.kgms,
-          date: this.editingSale.date
-        })
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.put('sale/' + this.editingSale.id, this.editingSale).then(response => {
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
     },
     createSale () {
       this.dialogNewSale = true
@@ -339,16 +331,11 @@ export default {
     postNewSale () {
       this.dialogNewSale = false
       // post sale to db
-      axios
-        .post('http://localhost:3000/sale', {
-          date: this.newSale.date,
-          boxes: this.newSale.boxes,
-          total: this.newSale.total,
-          kgms: this.newSale.kgms
-        })
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.post('sale', this.newSale).then(response => {
+        console.log('created new sale', response.data)
+      }, response => {
+        console.log(response.data)
+      })
     },
     setupChart () {
       var newLabels = []
@@ -389,12 +376,12 @@ export default {
   mounted () {
     this.setupChart()
     // GETTING DATA
-    axios
-      .get('http://localhost:3000/sales')
-      .then(response => {
-        console.log("p", response.data, "p")
-        this.items = response.data
-      })
+    this.$http.get('sales').then(response => {
+      this.items = response.data
+      console.log(response.data)
+    }, response => {
+      console.log('err', response.data)
+    })
   }
 }
 </script>

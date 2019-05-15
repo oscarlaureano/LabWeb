@@ -152,7 +152,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+
 export default {
   components: {
   },
@@ -190,11 +190,11 @@ export default {
     deleteProduct () {
       this.dialogDelete = false
       // post product to db
-      axios
-        .delete(`http://localhost:3000/product/${this.deletingProduct.id}`)
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.delete('product/' + this.deletingProduct.id).then(response => {
+        console.log(response.data)
+      }, response => {
+        console.log('bad ' + response.data)
+      })
     },
     editProduct (product) {
       this.editingProduct.name = product.name
@@ -205,41 +205,34 @@ export default {
     postNewProduct () {
       this.dialogCreateProduct = false
       // post product to db
-      axios
-        .post('http://localhost:3000/product', {
-          name: this.newProduct.name,
-          description: this.newProduct.description
-        })
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.post('product', this.newProduct).then(response => {
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
     },
     saveProduct () {
       this.dialogEditProduct = false
-      axios
-        .put(`http://localhost:3000/product/${this.editingProduct.id}`, {
-          name: this.editingProduct.name,
-          description: this.editingProduct.description
-        })
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.put('product/' + this.editingProduct.id, this.editingProduct).then(response => {
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
     }
   },
   mounted () {
     var vm = this
-    axios.get('http://localhost:3000/products')
-      .then(function (response) {
-        vm.products = []
-        response.data.forEach(product => {
-          if (product.estado) {
-            vm.items.push(product)
-          }
-        })
-      }, response => {
-        console.log('bad request')
-        console.log(response.data)
+    this.$http.get('products').then(response => {
+      vm.products = []
+      response.data.forEach(product => {
+        if (product.estado) {
+          vm.items.push(product)
+        }
       })
+    }, response => {
+      console.log('bad request')
+      console.log(response.data)
+    })
   }
 }
 </script>

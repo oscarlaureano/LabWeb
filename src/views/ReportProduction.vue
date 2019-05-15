@@ -176,11 +176,13 @@
           </v-layout>
           <v-layout>
             <v-flex xs6 px-2>
-              <v-text-field
-                label="Producto"
+              <v-select
+                :items="productOptions"
                 v-model="newProduction.product"
-              >
-              </v-text-field>
+                label="Producto"
+                required
+                :rules="[() => newProduction.product > 0 || 'Selecciona un producto.']">
+              </v-select>
             </v-flex>
             <v-flex xs6 px-2>
               <v-text-field
@@ -203,7 +205,6 @@
 
 <script>
 import ChartLine from '../components/ChartLine.js'
-import axios from 'axios'
 var moment = require('moment')
 moment.locale('es')
 export default {
@@ -218,13 +219,15 @@ export default {
       initialDate: false,
       formattedDate: null,
       newProduction: {
-        date: ''
+        date: '',
+        product: ''
       },
       editingProduction: {},
       deletingProduction: {},
       expand: false,
       search: '',
       products: [],
+      productOptions: [],
       headers: [
         {
           text: 'Fecha',
@@ -328,11 +331,11 @@ export default {
     },
     deleteProduction () {
       this.dialogDelete = false
-      axios
-        .delete(`http://localhost:3000/production/${this.deletingProduction.id}`)
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.delete('production/' + this.deletingProduction.id).then(response => {
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
     },
     createProduction () {
       this.dialogNewProduction = true
@@ -340,16 +343,11 @@ export default {
     postNewProduct () {
       this.dialogNewProduction = false
       // post production to db
-      axios
-        .post('http://localhost:3000/production', {
-          date: this.newProduction.date,
-          boxes: this.newProduction.boxes,
-          product: this.newProduction.product,
-          kgms: this.newProduction.kgms
-        })
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.post('http://localhost:3000/production', this.newProduction).then(response => {
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
     },
     editProduction (production) {
       this.editingProduction.boxes = production.boxes
@@ -359,14 +357,11 @@ export default {
     },
     saveProduction () {
       this.dialogEditProduction = false
-      axios
-        .put(`http://localhost:3000/production/${this.editingProduction.id}`, {
-          boxes: this.editingProduction.boxes,
-          kgms: this.editingProduction.kgms
-        })
-        .then(response => {
-          console.log(response.data)
-        })
+      this.$http.put('production/' + this.editingProduction.id, this.editingProduction).then(response => {
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
     },
     setupChart () {
       var newLabels = []
@@ -426,29 +421,33 @@ export default {
   },
   mounted () {
     // Get product name data
-    axios.get('http://localhost:3000/products')
-      .then(function (response) {
-        vm.products = response.data
-        console.log(vm.products)
-      }, response => {
-        console.log('bad request')
-        console.log(response.data)
+    this.$http.get('products').then(response => {
+      vm.products = response.data
+      response.data.forEach(function (product) {
+        vm.productOptions.push({
+          value: product.id,
+          text: product.name
+        })
       })
+      console.log(vm.products)
+    }, response => {
+      console.log('bad request')
+      console.log(response.data)
+    })
 
     // Get production data and initialize chart
     var vm = this
-    axios.get('http://localhost:3000/production')
-      .then(function (response) {
-        vm.items = response.data
-        vm.items.forEach(function (production) {
-          production.productionID = vm.products[production.productID - 1].name
-        })
-        // Setup chart
-        vm.setupChart()
-      }, response => {
-        console.log('bad request')
-        console.log(response.data)
+    this.$http.get('production').then(response => {
+      vm.items = response.data
+      vm.items.forEach(function (production) {
+        production.productionID = vm.products[production.productID - 1].name
       })
+      // Setup chart
+      vm.setupChart()
+    }, response => {
+      console.log('bad request')
+      console.log(response.data)
+    })
   }
 }
 </script>
