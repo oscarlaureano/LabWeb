@@ -317,7 +317,7 @@ export default {
     postNewProduct () {
       this.dialogNewProduction = false
       // post production to db
-      this.$http.post('http://localhost:3000/production', this.newProduction).then(response => {
+      this.$http.post('production', this.newProduction).then(response => {
         console.log(response.data)
       }, response => {
         console.log(response.data)
@@ -338,72 +338,59 @@ export default {
       })
     },
     setupChart () {
+      var vm = this
       var newLabels = []
       var colors = []
       var datasets = []
 
-      /*
       // Generate a label and color for each existing product
       this.products.forEach(function (item) {
         // Generate a color
         var letters = '0123456789ABCDEF'
         var color = '#'
         for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
+          color += letters[Math.floor(Math.random() * 16)]
         }
-
-        newLabels.push(item.date)
         colors.push(color)
       })
 
-      // For every production, associate data based on product
-      this.items.forEach(function (production) {
-        this.products.forEach(function (product) {
-          if (production.productionID === product.name) {
+      // Skip duplicate dates
+      for (var i = 0, len = this.items.length; i < len; i++) {
+        if (newLabels.indexOf(this.items[i].date) > -1) {
+          // console.log('Duplicate date');
+        } else {
+          // console.log('New date')
+          newLabels.push(this.items[i].date)
+        }
+      }
 
+      // For every product, associate data to production
+      var counter = 0
+      this.products.forEach(function (product) {
+        let data = []
+        vm.items.forEach(function (production) {
+          if (product.name === production.productionID) {
+            data.push(production.boxes)
           }
         })
         datasets.push({
-          
+          label: product.name,
+          borderColor: colors[counter],
+          borderWidth: 2,
+          radius: 3,
+          fill: false,
+          pointBorderColor: colors[counter],
+          backgroundColor: colors[counter],
+          data: data
         })
-        
+        counter++
       })
-      */
+
+      console.log(newLabels)
 
       var newChartProduction = {
         labels: newLabels,
-        datasets: [
-          {
-            label: this.products[0].name,
-            borderColor: 'blue',
-            borderWidth: 2,
-            radius: 3,
-            fill: false,
-            pointBorderColor: 'blue',
-            backgroundColor: 'blue',
-            data: [150, 45, 2, 25, 30, 30]
-          },
-          {
-            label: this.products[1].name,
-            borderColor: 'green',
-            borderWidth: 2,
-            radius: 3,
-            fill: false,
-            pointBorderColor: 'green',
-            backgroundColor: 'green',
-            data: [100, 35, 2, 40, 30, 30, 30]
-          },
-          {
-            label: this.products[2].name,
-            borderColor: 'orange',
-            borderWidth: 2,
-            radius: 3,
-            fill: false,
-            pointBorderColor: 'orange',
-            backgroundColor: 'orange',
-            data: [100, 40, 6, 35, 45, 40, 40]
-          }
-        ]
+        datasets: datasets
       }
       this.productionChart = newChartProduction
     },

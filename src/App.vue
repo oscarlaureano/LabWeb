@@ -16,7 +16,7 @@
           <v-card>
             <v-card-text>
               <v-text-field label="Email" v-model="user.email"></v-text-field>
-              <v-text-field label="Contraseña" v-model="user.password" type="password"></v-text-field>         
+              <v-text-field label="Contraseña" v-model="user.password" type="password"></v-text-field>
               <v-layout>
                 <v-flex xs4></v-flex>
                 <v-flex xs4>
@@ -88,7 +88,6 @@
               v-text="link.text"
             />
           </v-list-tile>
-
 
           <div>
             <br>
@@ -176,14 +175,8 @@ export default {
   methods: {
     login () {
       this.isSending = true
-      var options = {
-        headers: {
-          'Authorization': 'Basic ' + btoa(this.user.email + ':' + this.user.password)
-        }
-      }
-
       this.$http.post('auth', this.user).then(response => {
-        if(response.data == 401) {
+        if (response.data === 401) {
           this.isSending = false
           this.dialogFailure = true
         } else {
@@ -193,7 +186,6 @@ export default {
         }
 
         console.log(response.data)
-        
       }, response => {
         console.log('bad', response.data)
         this.isSending = false
