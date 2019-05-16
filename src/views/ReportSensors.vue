@@ -99,6 +99,8 @@
 
 <script>
 import ChartLine from '../components/ChartLine.js'
+var moment = require('moment')
+moment.locale('es')
 export default {
   components: {
     ChartLine
@@ -151,7 +153,7 @@ export default {
   methods: {
     setupChart () {
       var newChartSensors1 = {
-        labels: ['01/ene/2019', '02/ene/2019', '03/ene/2019', '04/ene/2019', '05/ene/2019', '06/ene/2019', '07/ene/2019', '08/ene/2019', '09/ene/2019', '10/ene/2019'],
+        labels: [moment().subtract(10,'d').format('DD-MM-YYYY'), moment().subtract(9,'d').format('DD-MM-YYYY'), moment().subtract(8,'d').format('DD-MM-YYYY'), moment().subtract(7,'d').format('DD-MM-YYYY'), moment().subtract(6,'d').format('DD-MM-YYYY'), moment().subtract(5,'d').format('DD-MM-YYYY'), moment().subtract(4,'d').format('DD-MM-YYYY'), moment().subtract(3,'d').format('DD-MM-YYYY'), moment().subtract(2,'d').format('DD-MM-YYYY'), moment().subtract(1,'d').format('DD-MM-YYYY')],
         datasets: [
           {
             label: 'Calidad tierra',
@@ -197,7 +199,7 @@ export default {
       }
 
       var newChartSensors2 = {
-        labels: ['01/ene/2019', '02/ene/2019', '03/ene/2019', '04/ene/2019', '05/ene/2019', '06/ene/2019', '07/ene/2019', '08/ene/2019', '09/ene/2019', '10/ene/2019'],
+        labels: [moment().subtract(10,'d').format('DD-MM-YYYY'), moment().subtract(9,'d').format('DD-MM-YYYY'), moment().subtract(8,'d').format('DD-MM-YYYY'), moment().subtract(7,'d').format('DD-MM-YYYY'), moment().subtract(6,'d').format('DD-MM-YYYY'), moment().subtract(5,'d').format('DD-MM-YYYY'), moment().subtract(4,'d').format('DD-MM-YYYY'), moment().subtract(3,'d').format('DD-MM-YYYY'), moment().subtract(2,'d').format('DD-MM-YYYY'), moment().subtract(1,'d').format('DD-MM-YYYY')],
         datasets: [
           {
             label: 'Calidad tierra',
@@ -243,7 +245,7 @@ export default {
       }
 
       var newChartSensors3 = {
-        labels: ['01/ene/2019', '02/ene/2019', '03/ene/2019', '04/ene/2019', '05/ene/2019', '06/ene/2019', '07/ene/2019', '08/ene/2019', '09/ene/2019', '10/ene/2019'],
+        labels: [moment().subtract(10,'d').format('DD-MM-YYYY'), moment().subtract(9,'d').format('DD-MM-YYYY'), moment().subtract(8,'d').format('DD-MM-YYYY'), moment().subtract(7,'d').format('DD-MM-YYYY'), moment().subtract(6,'d').format('DD-MM-YYYY'), moment().subtract(5,'d').format('DD-MM-YYYY'), moment().subtract(4,'d').format('DD-MM-YYYY'), moment().subtract(3,'d').format('DD-MM-YYYY'), moment().subtract(2,'d').format('DD-MM-YYYY'), moment().subtract(1,'d').format('DD-MM-YYYY')],
         datasets: [
           {
             label: 'Calidad tierra',
@@ -289,7 +291,7 @@ export default {
       }
 
       var newChartSensors4 = {
-        labels: ['01/ene/2019', '02/ene/2019', '03/ene/2019', '04/ene/2019', '05/ene/2019', '06/ene/2019', '07/ene/2019', '08/ene/2019', '09/ene/2019', '10/ene/2019'],
+        labels: [moment().subtract(10,'d').format('DD-MM-YYYY'), moment().subtract(9,'d').format('DD-MM-YYYY'), moment().subtract(8,'d').format('DD-MM-YYYY'), moment().subtract(7,'d').format('DD-MM-YYYY'), moment().subtract(6,'d').format('DD-MM-YYYY'), moment().subtract(5,'d').format('DD-MM-YYYY'), moment().subtract(4,'d').format('DD-MM-YYYY'), moment().subtract(3,'d').format('DD-MM-YYYY'), moment().subtract(2,'d').format('DD-MM-YYYY'), moment().subtract(1,'d').format('DD-MM-YYYY')],
         datasets: [
           {
             label: 'Calidad tierra',
