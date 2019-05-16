@@ -318,8 +318,13 @@ export default {
   },
   methods: {
     getSales () {
+      var vm = this
       this.$http.get('sales').then(response => {
-        this.items = response.data
+        vm.items = response.data
+        vm.items.forEach(function (item) {
+          item.date = moment(item.date).format('DD-MM-YYYY')
+        })
+        vm.setupChart()
         console.log(response.data)
       }, response => {
         console.log('err', response.data)
@@ -370,8 +375,11 @@ export default {
     },
     setupChart () {
       var newLabels = []
+      var newData = []
+      // Generate a label for each sale and push total to arr
       this.items.forEach(function (item) {
-        newLabels.push(moment(new Date(item.date)).format('MMMM YYYY'))
+        newLabels.push(item.date)
+        newData.push(item.total)
       })
 
       var newChartSales = {
@@ -385,7 +393,7 @@ export default {
             fill: false,
             pointBorderColor: 'green',
             backgroundColor: 'green',
-            data: [2400, 620, 100, 10000]
+            data: newData
           }
         ]
       }
@@ -405,9 +413,9 @@ export default {
     }
   },
   mounted () {
-    this.setupChart()
     // GETTING DATA
     this.getSales()
+
   }
 }
 </script>

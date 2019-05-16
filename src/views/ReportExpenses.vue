@@ -307,7 +307,7 @@ export default {
     },
     setupChart () {
       var newChartExpenses = {
-        labels: ['Ciclo marzo-octubre 2014', 'Ciclo marzo-octubre 2015', 'Ciclo marzo-octubre 2016', 'Ciclo marzo-octubre 2017', 'Ciclo marzo-octubre 2018'],
+        labels: ['Ciclo septiembre-diciembre 2018', 'Ciclo enero-abril 2019', 'Ciclo mayo-agosto 2019'],
         datasets: [
           {
             label: 'Materiales',
