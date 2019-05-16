@@ -2,9 +2,9 @@
   <v-app>
     <v-container v-if="!localToken" fluid>
       <v-layout>
-        <v-flex xs4></v-flex>
+        <v-flex md4></v-flex>
 
-        <v-flex xs4 class="text-xs-center">
+        <v-flex md4 xs12 class="text-xs-center">
           <v-card class="titleCard" style="background: #31ae84;">
             <v-card-text>
               <br>
@@ -32,7 +32,7 @@
           </v-card>
         </v-flex>
 
-        <v-flex xs4></v-flex>
+        <v-flex md4></v-flex>
       </v-layout>
     </v-container>
 
