@@ -95,8 +95,8 @@
         <v-card-text>¿Seguro que deseas eliminar este dato?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" @click="deleteProduction">Eliminar</v-btn>
-          <v-btn color="green" @click="dialogDelete = false">Cancelar</v-btn>
+          <v-btn dark color="red" @click="deleteProduction">Eliminar</v-btn>
+          <v-btn dark color="green" @click="dialogDelete = false">Cancelar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -129,8 +129,8 @@
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="dialogEditProduction = false">Cancelar</v-btn>
-          <v-btn color="green" @click="saveProduction" :disabled="!editForm">Guardar Cambios</v-btn>
+          <v-btn dark @click="dialogEditProduction = false">Cancelar</v-btn>
+          <v-btn dark color="green" @click="saveProduction" :disabled="!editForm">Guardar Cambios</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -203,8 +203,8 @@
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" @click="dialogNewProduction = false">Cancelar</v-btn>
-          <v-btn color="green" @click="postNewProduct" :disabled="!createForm">Crear Venta</v-btn>
+          <v-btn dark color="red" @click="dialogNewProduction = false">Cancelar</v-btn>
+          <v-btn dark color="green" @click="postNewProduct" :disabled="!createForm">Crear Venta</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -306,6 +306,7 @@ export default {
     deleteProduction () {
       this.dialogDelete = false
       this.$http.delete('production/' + this.deletingProduction.id).then(response => {
+        this.getProductions()
         console.log(response.data)
       }, response => {
         console.log(response.data)
@@ -318,6 +319,7 @@ export default {
       this.dialogNewProduction = false
       // post production to db
       this.$http.post('production', this.newProduction).then(response => {
+        this.getProductions()
         console.log(response.data)
       }, response => {
         console.log(response.data)
@@ -332,8 +334,24 @@ export default {
     saveProduction () {
       this.dialogEditProduction = false
       this.$http.put('production/' + this.editingProduction.id, this.editingProduction).then(response => {
+        this.getProductions()
         console.log(response.data)
       }, response => {
+        console.log(response.data)
+      })
+    },
+    getProductions () {
+      var vm = this
+      this.$http.get('production').then(response => {
+        vm.items = response.data
+        vm.items.forEach(function (production) {
+          production.productionID = vm.products[production.productID - 1].name
+        })
+        // Setup chart
+        console.log('production', response.data)
+        vm.setupChart()
+      }, response => {
+        console.log('bad request')
         console.log(response.data)
       })
     },

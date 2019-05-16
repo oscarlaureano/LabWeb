@@ -99,8 +99,8 @@
         <v-card-text>¿Seguro que deseas eliminar este dato?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" @click="deleteProduction">Eliminar</v-btn>
-          <v-btn color="green" @click="dialogDelete = false">Cancelar</v-btn>
+          <v-btn dark color="red" @click="deleteProduction">Eliminar</v-btn>
+          <v-btn dark color="green" @click="dialogDelete = false">Cancelar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -173,8 +173,8 @@
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" @click="dialogNewSale = false">Cancelar</v-btn>
-          <v-btn color="green" @click="postNewSale" :disabled="!createForm">Crear Venta</v-btn>
+          <v-btn dark color="red" @click="dialogNewSale = false">Cancelar</v-btn>
+          <v-btn dark color="green" @click="postNewSale" :disabled="!createForm">Crear Venta</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -217,8 +217,8 @@
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="dialogEditSale = false">Cancelar</v-btn>
-          <v-btn color="green" @click="saveSale" :disabled="!editForm">Guardar Cambios</v-btn>
+          <v-btn dark @click="dialogEditSale = false">Cancelar</v-btn>
+          <v-btn dark color="green" @click="saveSale" :disabled="!editForm">Guardar Cambios</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -317,6 +317,14 @@ export default {
     }
   },
   methods: {
+    getSales () {
+      this.$http.get('sales').then(response => {
+        this.items = response.data
+        console.log(response.data)
+      }, response => {
+        console.log('err', response.data)
+      })
+    },
     deleteDialogProduction (production) {
       this.dialogDelete = true
       this.deletingSale = production
@@ -324,6 +332,7 @@ export default {
     deleteProduction () {
       this.dialogDelete = false
       this.$http.delete('sale/' + this.deletingSale.id).then(response => {
+        this.getSales()
         console.log(response.data)
       }, response => {
         console.log(response.data)
@@ -340,6 +349,7 @@ export default {
     saveSale () {
       this.dialogEditSale = false
       this.$http.put('sale/' + this.editingSale.id, this.editingSale).then(response => {
+        this.getSales()
         console.log(response.data)
       }, response => {
         console.log(response.data)
@@ -352,6 +362,7 @@ export default {
       this.dialogNewSale = false
       // post sale to db
       this.$http.post('sale', this.newSale).then(response => {
+        this.getSales()
         console.log('created new sale', response.data)
       }, response => {
         console.log(response.data)
@@ -396,12 +407,7 @@ export default {
   mounted () {
     this.setupChart()
     // GETTING DATA
-    this.$http.get('sales').then(response => {
-      this.items = response.data
-      console.log(response.data)
-    }, response => {
-      console.log('err', response.data)
-    })
+    this.getSales()
   }
 }
 </script>

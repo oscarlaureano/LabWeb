@@ -104,8 +104,8 @@
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" @click="dialogCreateProduct = false">Cancelar</v-btn>
-          <v-btn color="green" @click="postNewProduct" :disabled="!createForm">Crear Producto</v-btn>
+          <v-btn dark color="red" @click="dialogCreateProduct = false">Cancelar</v-btn>
+          <v-btn dark color="green" @click="postNewProduct" :disabled="!createForm">Crear Producto</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -138,8 +138,8 @@
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="dialogEditProduct = false">Cancelar</v-btn>
-          <v-btn color="green" @click="saveProduct" :disabled="!editForm">Guardar Cambios</v-btn>
+          <v-btn dark @click="dialogEditProduct = false">Cancelar</v-btn>
+          <v-btn dark color="green" @click="saveProduct" :disabled="!editForm">Guardar Cambios</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -150,8 +150,8 @@
         <v-card-text>¿Seguro que deseas eliminar este dato?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" @click="deleteProduct">Eliminar</v-btn>
-          <v-btn color="green" @click="dialogDelete = false">Cancelar</v-btn>
+          <v-btn dark color="red" @click="deleteProduct">Eliminar</v-btn>
+          <v-btn dark color="green" @click="dialogDelete = false">Cancelar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -196,6 +196,21 @@ export default {
     }
   },
   methods: {
+    getProducts () {
+      var vm = this
+      this.$http.get('products').then(response => {
+        vm.products = []
+        vm.items = []
+        response.data.forEach(product => {
+          if (product.estado) {
+            vm.items.push(product)
+          }
+        })
+      }, response => {
+        console.log('bad request')
+        console.log(response.data)
+      })
+    },
     createProduct () {
       this.dialogCreateProduct = true
     },
@@ -207,6 +222,7 @@ export default {
       this.dialogDelete = false
       // post product to db
       this.$http.delete('product/' + this.deletingProduct.id).then(response => {
+        this.getProducts()
         console.log(response.data)
       }, response => {
         console.log('bad ' + response.data)
@@ -222,6 +238,7 @@ export default {
       this.dialogCreateProduct = false
       // post product to db
       this.$http.post('product', this.newProduct).then(response => {
+        this.getProducts()
         console.log(response.data)
       }, response => {
         console.log(response.data)
@@ -230,6 +247,7 @@ export default {
     saveProduct () {
       this.dialogEditProduct = false
       this.$http.put('product/' + this.editingProduct.id, this.editingProduct).then(response => {
+        this.getProducts()
         console.log(response.data)
       }, response => {
         console.log(response.data)
@@ -237,18 +255,7 @@ export default {
     }
   },
   mounted () {
-    var vm = this
-    this.$http.get('products').then(response => {
-      vm.products = []
-      response.data.forEach(product => {
-        if (product.estado) {
-          vm.items.push(product)
-        }
-      })
-    }, response => {
-      console.log('bad request')
-      console.log(response.data)
-    })
+    this.getProducts()
   }
 }
 </script>

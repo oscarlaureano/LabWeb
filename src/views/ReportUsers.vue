@@ -83,8 +83,8 @@
         <v-card-text>¿Seguro que deseas eliminar este dato?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" @click="deleteUser()">Eliminar</v-btn>
-          <v-btn color="green" @click="dialogDelete = false">Cancelar</v-btn>
+          <v-btn dark color="red" @click="deleteUser()">Eliminar</v-btn>
+          <v-btn dark color="green" @click="dialogDelete = false">Cancelar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -129,8 +129,8 @@
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" @click="dialogNewUser = false">Cancelar</v-btn>
-          <v-btn color="green" @click="postNewUser" :disabled="!createForm">Crear Usuario</v-btn>
+          <v-btn dark color="red" @click="dialogNewUser = false">Cancelar</v-btn>
+          <v-btn dark color="green" @click="postNewUser" :disabled="!createForm">Crear Usuario</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -174,8 +174,8 @@
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="dialogEditUser = false">Cancelar</v-btn>
-          <v-btn color="green" @click="saveUser" :disabled="!editForm">Guardar Cambios</v-btn>
+          <v-btn dark @click="dialogEditUser = false">Cancelar</v-btn>
+          <v-btn dark color="green" @click="saveUser" :disabled="!editForm">Guardar Cambios</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -238,6 +238,14 @@ export default {
     }
   },
   methods: {
+    getUsers () {
+      this.$http.get('users').then(response => {
+        this.items = response.data
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
+    },
     deleteDialogUser (user) {
       this.dialogDelete = true
       this.deletingUser = user
@@ -245,6 +253,7 @@ export default {
     deleteUser () {
       this.dialogDelete = false
       this.$http.delete('user/' + this.deletingUser.id).then(response => {
+        this.getUsers()
         console.log(response.data)
       }, response => {
         console.log(response.data)
@@ -261,6 +270,7 @@ export default {
       this.dialogEditUser = false
       // update user with id in db
       this.$http.put('user/' + this.editingUser.id, this.editingUser).then(response => {
+        this.getUsers()
         console.log(response.data)
       }, response => {
         console.log(response.data)
@@ -273,6 +283,7 @@ export default {
       this.dialogNewUser = false
       // post user to db
       this.$http.post('user', this.newUser).then(response => {
+        this.getUsers()
         console.log(response.data)
       }, response => {
         console.log(response.data)
@@ -281,12 +292,7 @@ export default {
   },
   mounted () {
     // GETTING DATA
-    this.$http.get('users').then(response => {
-      this.items = response.data
-      console.log(response.data)
-    }, response => {
-      console.log(response.data)
-    })
+    this.getUsers()
   }
 }
 </script>

@@ -88,8 +88,8 @@
         <v-card-text>¿Seguro que deseas eliminar este dato?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" @click="deleteExpense">Eliminar</v-btn>
-          <v-btn color="green" @click="dialogDelete = false">Cancelar</v-btn>
+          <v-btn dark color="red" @click="deleteExpense">Eliminar</v-btn>
+          <v-btn dark color="green" @click="dialogDelete = false">Cancelar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -134,8 +134,8 @@
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" @click="dialogNewExpense = false">Cancelar</v-btn>
-          <v-btn color="green" @click="postNewExpense" :disabled="!createForm">Crear Egreso</v-btn>
+          <v-btn dark color="red" @click="dialogNewExpense = false">Cancelar</v-btn>
+          <v-btn dark color="green" @click="postNewExpense" :disabled="!createForm">Crear Egreso</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -180,8 +180,8 @@
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="dialogEditExpense = false">Cancelar</v-btn>
-          <v-btn color="green" @click="saveExpense" :disabled="!editForm">Guardar Cambios</v-btn>
+          <v-btn dark @click="dialogEditExpense = false">Cancelar</v-btn>
+          <v-btn dark color="green" @click="saveExpense" :disabled="!editForm">Guardar Cambios</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -261,6 +261,7 @@ export default {
     deleteExpense () {
       this.dialogDelete = false
       this.$http.delete('expense/' + this.deletingExpense.id).then(response => {
+        this.getExpenses()
         console.log(response.data)
       }, response => {
         console.log(response.data)
@@ -277,6 +278,7 @@ export default {
     saveExpense () {
       this.dialogEditExpense = false
       this.$http.put('expense/' + this.editingExpense.id, this.editingExpense).then(response => {
+        this.getExpenses()
         console.log(response.data)
       }, response => {
         console.log(response.data)
@@ -289,6 +291,15 @@ export default {
       this.dialogNewExpense = false
       // post Expense to db
       this.$http.post('expense', this.newExpense).then(response => {
+        this.getExpenses()
+        console.log(response.data)
+      }, response => {
+        console.log(response.data)
+      })
+    },
+    getExpenses () {
+      this.$http.get('expenses').then(response => {
+        this.items = response.data
         console.log(response.data)
       }, response => {
         console.log(response.data)
