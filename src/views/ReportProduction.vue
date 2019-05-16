@@ -261,44 +261,7 @@ export default {
           align: 'right'
         }
       ],
-      items: [
-        {
-          id: 1,
-          date: moment(new Date('01/01/2019 07:28')).format('MMMM YYYY'),
-          boxes: 350,
-          kgms: 12000
-        },
-        {
-          id: 2,
-          date: moment(new Date('02/01/2019 07:28')).format('MMMM YYYY'),
-          boxes: 120,
-          kgms: 3100
-        },
-        {
-          id: 3,
-          date: moment(new Date('03/01/2019 07:28')).format('MMMM YYYY'),
-          boxes: 10,
-          kgms: 500
-        },
-        {
-          id: 4,
-          date: moment(new Date('04/01/2019 07:28')).format('MMMM YYYY'),
-          boxes: 100,
-          kgms: 50000
-        },
-        {
-          id: 5,
-          date: moment(new Date('05/01/2019 07:28')).format('MMMM YYYY'),
-          boxes: 100,
-          kgms: 50000
-        },
-        {
-          id: 6,
-          date: moment(new Date('06/01/2019 07:28')).format('MMMM YYYY'),
-          boxes: 100,
-          kgms: 50000
-        }
-      ],
+      items: [],
       chartOptions: {
         scales: {
           yAxes: [
@@ -376,9 +339,36 @@ export default {
     },
     setupChart () {
       var newLabels = []
-      this.items.forEach(function (item) {
+      var colors = []
+      var datasets = []
+
+      /*
+      // Generate a label and color for each existing product
+      this.products.forEach(function (item) {
+        // Generate a color
+        var letters = '0123456789ABCDEF'
+        var color = '#'
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+
         newLabels.push(item.date)
+        colors.push(color)
       })
+
+      // For every production, associate data based on product
+      this.items.forEach(function (production) {
+        this.products.forEach(function (product) {
+          if (production.productionID === product.name) {
+
+          }
+        })
+        datasets.push({
+          
+        })
+        
+      })
+      */
 
       var newChartProduction = {
         labels: newLabels,
@@ -454,6 +444,7 @@ export default {
         production.productionID = vm.products[production.productID - 1].name
       })
       // Setup chart
+      console.log('production', response.data)
       vm.setupChart()
     }, response => {
       console.log('bad request')
