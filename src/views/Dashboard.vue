@@ -2,7 +2,7 @@
   <div>
     <v-container fluid>
       <v-layout wrap>
-        <v-flex xs3 pr-2>
+        <v-flex md3 xs12 pr-2 pb-2>
           <v-card class="roundCard">
             <v-card-text>
               <v-layout>
@@ -19,7 +19,7 @@
           </v-card>
         </v-flex>
 
-        <v-flex xs3 px-2>
+        <v-flex md3 xs12 px-2 pb-2>
           <v-card class="roundCard">
             <v-card-text>
               <v-layout>
@@ -36,7 +36,7 @@
           </v-card>
         </v-flex>
 
-        <v-flex xs3 px-2>
+        <v-flex md3 xs12 px-2 pb-2>
           <v-card class="roundCard">
             <v-card-text>
               <v-layout>
@@ -53,7 +53,7 @@
           </v-card>
         </v-flex>
 
-        <v-flex xs3 pl-2>
+        <v-flex md3 xs12 pl-2  pb-2>
           <v-card class="roundCard">
             <v-card-text>
               <v-layout>
@@ -73,8 +73,8 @@
 
       <br>
 
-      <v-layout>
-        <v-flex md7 pr-2>
+      <v-layout row wrap>
+        <v-flex md7 xs12 pr-2 pb-1>
           <v-card class="roundCard">
             <v-card-text>
               <chart-line
@@ -86,7 +86,7 @@
           </v-card>
         </v-flex>
 
-        <v-flex md5>
+        <v-flex md5 xs12>
           <v-card class="roundCard">
             <v-card-text>
               <chart-bar
@@ -101,8 +101,8 @@
 
       <br>
 
-      <v-layout>
-        <v-flex xs4 pr-2>
+      <v-layout row wrap>
+        <v-flex md4 xs12 pr-2 pb-1>
           <v-card class="roundCard">
             <v-card-text>
               <v-layout>
@@ -119,7 +119,7 @@
           </v-card>
         </v-flex>
 
-        <v-flex xs4 px-2>
+        <v-flex md4 xs12 px-2 pb-1>
           <v-card class="roundCard">
             <v-card-text>
               <v-layout>
@@ -136,7 +136,7 @@
           </v-card>
         </v-flex>
 
-        <v-flex xs4 px-2>
+        <v-flex md4 xs12 px-2 pb-1>
           <v-card class="roundCard">
             <v-card-text>
               <v-layout>
