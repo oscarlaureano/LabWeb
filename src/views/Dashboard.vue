@@ -12,7 +12,7 @@
 
                 <v-flex xs7 class="text-xs-right">
                   Total Ventas
-                  <p class="numbers">$11,959.00</p>
+                  <p class="numbers">${{ totalSales }}</p>
                 </v-flex>
               </v-layout>
             </v-card-text>
@@ -29,7 +29,7 @@
 
                 <v-flex xs7 class="text-xs-right">
                   Cajas Vendidas
-                  <p class="numbers">126</p>
+                  <p class="numbers">{{ totalBoxes }}</p>
                 </v-flex>
               </v-layout>
             </v-card-text>
@@ -46,7 +46,7 @@
 
                 <v-flex xs7 class="text-xs-right">
                   Total Costos
-                  <p class="numbers">$4,201.61</p>
+                  <p class="numbers">${{ totalCosts }}</p>
                 </v-flex>
               </v-layout>
             </v-card-text>
@@ -63,7 +63,7 @@
 
                 <v-flex xs7 class="text-xs-right">
                   Margen Bruto 0%
-                  <p class="numbers">$7547.86</p>
+                  <p class="numbers">${{ totalEarned }}</p>
                 </v-flex>
               </v-layout>
             </v-card-text>
@@ -112,7 +112,7 @@
 
                 <v-flex xs7 class="text-xs-right">
                   Venta promedio
-                  <p class="numbers">$290.87</p>
+                  <p class="numbers">${{ averageSale }}</p>
                 </v-flex>
               </v-layout>
             </v-card-text>
@@ -169,6 +169,11 @@ export default {
   },
   data () {
     return {
+      totalSales: null,
+      totalBoxes: null,
+      totalCosts: null,
+      totalEarned: null,
+      averageSale: null,
       stockChart: {},
       lineChartDummy1: {
         labels: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'],
@@ -276,10 +281,40 @@ export default {
         ]
       }
       this.stockChart = newStockChart
+    },
+    getSales () {
+      var vm = this
+      this.totalSales = 0
+      this.totalBoxes = 0
+      this.$http.get('sales').then(response => {
+        console.log(response.data)
+        response.data.forEach(function (sale) {
+          vm.totalSales += sale.total
+          vm.totalBoxes += sale.boxes
+        })
+        vm.averageSale = vm.totalSales / response.data.length
+      }, response => {
+        console.log('err', response.data)
+      })
+    },
+    getExpenses () {
+      var vm = this
+      this.totalCosts = 0
+      this.$http.get('expenses').then(response => {
+        console.log(response.data)
+        response.data.forEach(function (expense) {
+          vm.totalCosts += expense.cost
+        })
+        vm.totalEarned = vm.totalSales - vm.totalCosts
+      }, response => {
+        console.log('err', response.data)
+      })
     }
   },
   mounted () {
     this.setupCharts()
+    this.getSales()
+    this.getExpenses()
   }
 }
 </script>

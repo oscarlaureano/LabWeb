@@ -153,7 +153,7 @@ export default {
   methods: {
     setupChart () {
       var newChartSensors1 = {
-        labels: [moment().subtract(10,'d').format('DD-MM-YYYY'), moment().subtract(9,'d').format('DD-MM-YYYY'), moment().subtract(8,'d').format('DD-MM-YYYY'), moment().subtract(7,'d').format('DD-MM-YYYY'), moment().subtract(6,'d').format('DD-MM-YYYY'), moment().subtract(5,'d').format('DD-MM-YYYY'), moment().subtract(4,'d').format('DD-MM-YYYY'), moment().subtract(3,'d').format('DD-MM-YYYY'), moment().subtract(2,'d').format('DD-MM-YYYY'), moment().subtract(1,'d').format('DD-MM-YYYY')],
+        labels: [moment().subtract(10, 'd').format('DD-MM-YYYY'), moment().subtract(9, 'd').format('DD-MM-YYYY'), moment().subtract(8, 'd').format('DD-MM-YYYY'), moment().subtract(7, 'd').format('DD-MM-YYYY'), moment().subtract(6, 'd').format('DD-MM-YYYY'), moment().subtract(5, 'd').format('DD-MM-YYYY'), moment().subtract(4, 'd').format('DD-MM-YYYY'), moment().subtract(3, 'd').format('DD-MM-YYYY'), moment().subtract(2, 'd').format('DD-MM-YYYY'), moment().subtract(1, 'd').format('DD-MM-YYYY')],
         datasets: [
           {
             label: 'Calidad tierra',
@@ -199,7 +199,7 @@ export default {
       }
 
       var newChartSensors2 = {
-        labels: [moment().subtract(10,'d').format('DD-MM-YYYY'), moment().subtract(9,'d').format('DD-MM-YYYY'), moment().subtract(8,'d').format('DD-MM-YYYY'), moment().subtract(7,'d').format('DD-MM-YYYY'), moment().subtract(6,'d').format('DD-MM-YYYY'), moment().subtract(5,'d').format('DD-MM-YYYY'), moment().subtract(4,'d').format('DD-MM-YYYY'), moment().subtract(3,'d').format('DD-MM-YYYY'), moment().subtract(2,'d').format('DD-MM-YYYY'), moment().subtract(1,'d').format('DD-MM-YYYY')],
+        labels: [moment().subtract(10, 'd').format('DD-MM-YYYY'), moment().subtract(9, 'd').format('DD-MM-YYYY'), moment().subtract(8, 'd').format('DD-MM-YYYY'), moment().subtract(7, 'd').format('DD-MM-YYYY'), moment().subtract(6, 'd').format('DD-MM-YYYY'), moment().subtract(5, 'd').format('DD-MM-YYYY'), moment().subtract(4, 'd').format('DD-MM-YYYY'), moment().subtract(3, 'd').format('DD-MM-YYYY'), moment().subtract(2, 'd').format('DD-MM-YYYY'), moment().subtract(1, 'd').format('DD-MM-YYYY')],
         datasets: [
           {
             label: 'Calidad tierra',
@@ -245,7 +245,7 @@ export default {
       }
 
       var newChartSensors3 = {
-        labels: [moment().subtract(10,'d').format('DD-MM-YYYY'), moment().subtract(9,'d').format('DD-MM-YYYY'), moment().subtract(8,'d').format('DD-MM-YYYY'), moment().subtract(7,'d').format('DD-MM-YYYY'), moment().subtract(6,'d').format('DD-MM-YYYY'), moment().subtract(5,'d').format('DD-MM-YYYY'), moment().subtract(4,'d').format('DD-MM-YYYY'), moment().subtract(3,'d').format('DD-MM-YYYY'), moment().subtract(2,'d').format('DD-MM-YYYY'), moment().subtract(1,'d').format('DD-MM-YYYY')],
+        labels: [moment().subtract(10, 'd').format('DD-MM-YYYY'), moment().subtract(9, 'd').format('DD-MM-YYYY'), moment().subtract(8, 'd').format('DD-MM-YYYY'), moment().subtract(7, 'd').format('DD-MM-YYYY'), moment().subtract(6, 'd').format('DD-MM-YYYY'), moment().subtract(5, 'd').format('DD-MM-YYYY'), moment().subtract(4, 'd').format('DD-MM-YYYY'), moment().subtract(3, 'd').format('DD-MM-YYYY'), moment().subtract(2, 'd').format('DD-MM-YYYY'), moment().subtract(1, 'd').format('DD-MM-YYYY')],
         datasets: [
           {
             label: 'Calidad tierra',
@@ -291,7 +291,7 @@ export default {
       }
 
       var newChartSensors4 = {
-        labels: [moment().subtract(10,'d').format('DD-MM-YYYY'), moment().subtract(9,'d').format('DD-MM-YYYY'), moment().subtract(8,'d').format('DD-MM-YYYY'), moment().subtract(7,'d').format('DD-MM-YYYY'), moment().subtract(6,'d').format('DD-MM-YYYY'), moment().subtract(5,'d').format('DD-MM-YYYY'), moment().subtract(4,'d').format('DD-MM-YYYY'), moment().subtract(3,'d').format('DD-MM-YYYY'), moment().subtract(2,'d').format('DD-MM-YYYY'), moment().subtract(1,'d').format('DD-MM-YYYY')],
+        labels: [moment().subtract(10, 'd').format('DD-MM-YYYY'), moment().subtract(9, 'd').format('DD-MM-YYYY'), moment().subtract(8, 'd').format('DD-MM-YYYY'), moment().subtract(7, 'd').format('DD-MM-YYYY'), moment().subtract(6, 'd').format('DD-MM-YYYY'), moment().subtract(5, 'd').format('DD-MM-YYYY'), moment().subtract(4, 'd').format('DD-MM-YYYY'), moment().subtract(3, 'd').format('DD-MM-YYYY'), moment().subtract(2, 'd').format('DD-MM-YYYY'), moment().subtract(1, 'd').format('DD-MM-YYYY')],
         datasets: [
           {
             label: 'Calidad tierra',
