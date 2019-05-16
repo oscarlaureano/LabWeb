@@ -415,7 +415,6 @@ export default {
   mounted () {
     // GETTING DATA
     this.getSales()
-
   }
 }
 </script>

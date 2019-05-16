@@ -310,7 +310,7 @@ export default {
         labels: ['Ciclo septiembre-diciembre 2018', 'Ciclo enero-abril 2019', 'Ciclo mayo-agosto 2019'],
         datasets: [
           {
-            label: 'Materiales',
+            label: 'Agua',
             borderColor: 'blue',
             borderWidth: 2,
             radius: 3,
@@ -320,7 +320,7 @@ export default {
             data: [15000, 4500, 2000, 2500, 3000, 3000]
           },
           {
-            label: 'Servicios',
+            label: 'Semillas',
             borderColor: 'green',
             borderWidth: 2,
             radius: 3,
