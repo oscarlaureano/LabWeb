@@ -167,6 +167,28 @@ app.get('/production', (req, res) => {
   })
 })
 
+// Authentication (login)
+app.post('/auth', (req, res) => {
+  var auth
+  let body = req.body
+  // '?'s prevent injection
+  db.query('SELECT * FROM USuario WHERE Correo=? AND Contraseña=?', [body.email, body.password], (err, result) => {
+    if (err) throw err
+    
+    if (result[0] == null){
+      console.log('Cannot authenticate ')
+      auth = 401
+    } else {
+      console.log('result: ', result)
+      auth = { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' }
+    }
+
+    
+    res.json(auth)
+  })
+  
+})
+
 // Agregar usuario ( Nombre_Completo, Correo, Contraseña, Tipo_Usuario )
 app.post('/user', (req, res) => {
   let body = req.body

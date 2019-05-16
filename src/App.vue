@@ -1,6 +1,43 @@
 <template>
   <v-app>
+    <v-container v-if="!localToken" fluid>
+      <v-layout>
+        <v-flex xs4></v-flex>
+
+        <v-flex xs4 class="text-xs-center">
+          <v-card class="titleCard" style="background: #31ae84;">
+            <v-card-text>
+              <br>
+              <h3 class="headline whiteFont">Iniciar Sesión</h3>
+              <br>
+            </v-card-text>
+          </v-card>
+
+          <v-card>
+            <v-card-text>
+              <v-text-field label="Email" v-model="user.email"></v-text-field>
+              <v-text-field label="Contraseña" v-model="user.password" type="password"></v-text-field>         
+              <v-layout>
+                <v-flex xs4></v-flex>
+                <v-flex xs4>
+                  <v-btn outline :disabled="isSending" block @click="login">Entrar</v-btn>
+                  <br>
+                  <v-progress-circular v-if="isSending" indeterminate color="purple"></v-progress-circular>
+                </v-flex>
+                <v-flex xs4></v-flex>
+              </v-layout>
+              <br>
+              <a @click="dialogTemplate = true">Olvidaste tu contraseña?</a>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+
+        <v-flex xs4></v-flex>
+      </v-layout>
+    </v-container>
+
     <v-navigation-drawer
+      v-if="localToken"
       id="app-drawer"
       app
       dark
@@ -51,13 +88,34 @@
               v-text="link.text"
             />
           </v-list-tile>
+
+
+          <div>
+            <br>
+          </div>
+          <v-btn flat @click="logout">
+            <v-icon>exit_to_app</v-icon>Logout
+          </v-btn>
+        </v-layout>
+        <v-layout>
         </v-layout>
       </v-img>
     </v-navigation-drawer>
 
     <v-content>
-      <router-view/>
+      <router-view v-if="localToken"></router-view>
     </v-content>
+
+    <v-dialog v-model="dialogFailure" max-width="290" persistent>
+      <v-card>
+        <v-card-title class="headline">Credenciales inválidas</v-card-title>
+        <v-card-text>Correo o contraseña incorrectos, intenta de nuevo.</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn dark color="blue" @click="closeDialog">Reintentar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -67,6 +125,14 @@ export default {
   name: 'App',
   data () {
     return {
+      isSending: false,
+      dialogFailure: false,
+      user: {
+        email: '',
+        password: ''
+      },
+      localToken: null,
+      localUser: null,
       links: [
         {
           to: '/',
@@ -106,7 +172,48 @@ export default {
       ],
       responsive: false
     }
-  }
+  },
+  methods: {
+    login () {
+      this.isSending = true
+      var options = {
+        headers: {
+          'Authorization': 'Basic ' + btoa(this.user.email + ':' + this.user.password)
+        }
+      }
+
+      this.$http.post('auth', this.user).then(response => {
+        if(response.data == 401) {
+          this.isSending = false
+          this.dialogFailure = true
+        } else {
+          window.localStorage.setItem('token', response.data.token)
+          this.localToken = window.localStorage.token
+          this.isSending = false
+        }
+
+        console.log(response.data)
+        
+      }, response => {
+        console.log('bad', response.data)
+        this.isSending = false
+      })
+    },
+    logout () {
+      this.localToken = null
+      localStorage.clear()
+    },
+    closeDialog () {
+      this.user.password = ''
+      this.dialogFailure = false
+    }
+  },
+  created () {
+    if (window.localStorage.token) {
+      this.localToken = window.localStorage.token
+    }
+  },
+  mounted () {}
 }
 </script>
 
@@ -161,5 +268,17 @@ export default {
 
 .card-subtitle {
   color: hsla(0,0%,100%,.62);
+}
+
+.titleCard {
+  background: #31ae84;
+}
+
+.whiteFont {
+  color: white;
+}
+
+.capitalize {
+  text-transform: capitalize;
 }
 </style>
