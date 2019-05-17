@@ -13,7 +13,8 @@ Instalar los siguientes paquetes de software, en este caso se utiliza Windows 10
 ### Setup Webapp
 1. Clonar este proyecto por medio del comando: `git clone https://github.com/OscarLaureanoXX/LabWeb`
 2. Ir al directorio y ejecutar el comando: `npm install`
-3. Ejecutar el comando: `npm run serve`
+3. Ir al directorio `/src` y abrir main.js, modificar la linea 10 `Vue.http.options.root = 'http://52.191.252.19:3000/'` , para que en vez de ser la anterior, sea localhost: `Vue.http.options.root = 'http://localhost:3000/'`
+4. Ejecutar el comando: `npm run serve`
 
 ### Setup Backend
 1. Ejecutar XAMPP.
