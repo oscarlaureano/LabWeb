@@ -15,7 +15,7 @@
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "mysql": "^2.16.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^7.0.0",
     "vue": "^2.6.6",
     "vue-chartjs": "^3.4.0",
     "vue-resource": "^1.5.1",
